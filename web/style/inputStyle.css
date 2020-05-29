@@ -1,6 +1,6 @@
 @charset "ISO-8859-1";
 
-.inputButton,.inputText
+.inputButton,.inputText,.inputFile
 {
 	width: -webkit-fill-available;
 	width: -moz-fill-available;
@@ -28,9 +28,57 @@
 	padding-left: 1em;
 }
 
+.inputFile>label
+{
+    position: relative;
+    height: 2.5em;
+    top: 0.25em;
+    left: 1em;
+    opacity: 50%;
+    cursor: pointer;
+}
+
+.inputFile>label>img,.inputButton>img
+{
+    height: 2.5em;
+    margin-right: 1em;
+}
+
+.inputButton>img
+{
+	width: 2.5em;
+	display: none;
+}
+
+.inputFile>input
+{
+	width: 0.1px;
+	height: 0.1px;
+}
+
 .inputButton#subUsr
 {
 	margin-top: 4em;
+}
+
+.turno
+{
+	margin-left: 3em;
+	margin-right: 3em;
+	display: none;
+	
+	-webkit-transition: 3s;
+	-moz-transition: 3s;
+	-ms-transition: 3s;
+	-o-transition: 3s;
+	transition: 3s;
+}
+
+.add>img
+{
+	margin-right: 0px;
+	margin-top: 0.15em;
+	display: initial;
 }
 
 form>a
@@ -117,7 +165,7 @@ input:checked + .slider:before
 
 .selectType
 {
-	margin: 10em 0px 3em 0px;
+	margin: 0px 0px 3em 0px;
 }
 
 label.desc

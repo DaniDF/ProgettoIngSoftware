@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Sign in</title>
+	
+	<meta name="theme-color" content="#EE0022">
+	<link rel="icon" type="image/png" href="/ProgettoIngSoftware/img/icon.png" />
+	
+	<link rel="stylesheet" type="text/css" href="/ProgettoIngSoftware/style/mainStyle_mobile.css">
+	<link rel="stylesheet" type="text/css" href="/ProgettoIngSoftware/style/inputStyle.css">
+</head>
+<body>
+	<h1>Registrati</h1>
+	
+	<form action="signin" method="post">
+		<input type="text" id="nome_stru" name="nome_stru" placeholder="Nome della tua struttura" class="inputText">
+		<div class="inputFile">
+			<input type="file" id="fattura" name="fattura" placeholder="Fattura valida">
+			<label for="fattura">
+				<img src="/ProgettoIngSoftware/img/file.png">
+				Carica fattura valida
+			</label>
+		</div>
+		<input type="text" id="par_iva" name="par_iva" placeholder="Partita iva" class="inputText">
+		<input type="text" id="nazione" name="nazione" placeholder="Nazione" class="inputText">
+		<input type="text" id="provincia" name="provincia" placeholder="Provincia" class="inputText">
+		<input type="text" id="citta" name="citta" placeholder="Citt&agrave" class="inputText">
+		<input type="text" id="via" name="via" placeholder="Via" class="inputText">
+		<input type="text" id="num_civ" name="num_civ" placeholder="Numero civico" class="inputText">
+		<input type="text" id="cap" name="cap" placeholder="Cap" class="inputText">
+		<input type="text" id="usr" name="usr" placeholder="Username" class="inputText">
+		<input type="password" id="psw" name="psw" placeholder="Password" class="inputText">
+		<input type="submit" id="subUsr" value="Registrati" class="inputButton">
+	</form>
+</body>
+</html>
