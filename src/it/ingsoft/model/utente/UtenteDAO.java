@@ -2,7 +2,7 @@ package it.ingsoft.model.utente;
 
 import java.sql.SQLException;
 
-interface UtenteDAO {
+public interface UtenteDAO {
 	public void createTable() throws SQLException;
 	public void dropTable() throws SQLException;
 	

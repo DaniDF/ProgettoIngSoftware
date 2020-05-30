@@ -18,48 +18,137 @@ public class Struttura {
 	private char[] cap;
 	private List<Turno> turni;
 	
+	/**
+	 * Metodo per acquisire il nome della struttura
+	 * 
+	 * @return	Il nome della struttura
+	 */
 	public String getNomeStruttura() {
 		return nomeStruttura;
 	}
+	
+	/**
+	 * Metodo per settare il nome della struttura
+	 * 
+	 * @param nome Nome della struttura
+	 */
 	public void setNomeStruttura(String nomeStruttura) {
 		this.nomeStruttura = nomeStruttura;
 	}
+	
+	/**
+	 * Metodo per acquisire il file di conferma della struttura
+	 * 
+	 * @return	Il file di conferma della struttura
+	 */
 	public File getFotoFatturaValida() {
 		return fotoFatturaValida;
 	}
+	
+	/**
+	 * Metodo per settare il file di conferma della struttura
+	 * 
+	 * @param nome File di conferma della struttura
+	 */
 	public void setFotoFatturaValida(File fotoFatturaValida) {
 		this.fotoFatturaValida = fotoFatturaValida;
 	}
+	
+	/**
+	 * Metodo per acquisire la partita iva della struttura
+	 * 
+	 * @return	La partita della struttura
+	 */
 	public String getPartitaIva() {
 		return partitaIva;
 	}
+	
+	/**
+	 * Metodo per settare la partita iva della struttura
+	 * 
+	 * @param nome La partita iva della struttura
+	 */
 	public void setPartitaIva(String partitaIva) {
 		this.partitaIva = partitaIva;
 	}
+	
+	/**
+	 * Metodo per acquisire l'iban della struttura
+	 * 
+	 * @return	L'iban della struttura
+	 */
 	public String getIban() {
 		return iban;
 	}
+	
+	/**
+	 * Metodo per settare l'iban della struttura
+	 * 
+	 * @param nome L'iban della struttura
+	 */
 	public void setIban(String iban) {
 		this.iban = iban;
 	}
+	
+	/**
+	 * Metodo per acquisire la nazione della struttura
+	 * 
+	 * @return	L'iban della struttura
+	 */
 	public String getNazione() {
 		return nazione;
 	}
+	
+	/**
+	 * Metodo per settare la nazione della struttura
+	 * 
+	 * @param dataDiNascita Nazione della struttura
+	 */
 	public void setNazione(String nazione) {
 		this.nazione = nazione;
 	}
+	
+	/**
+	 * Metodo per acquisire la provincia della struttura
+	 * 
+	 * @return La provincia della struttura
+	 */
 	public String getProvincia() {
 		return provincia;
 	}
+	
+	/**
+	 * Metodo per settare la provincia della struttura
+	 * 
+	 * @param dataDiNascita Provincia della struttura
+	 */
 	public void setProvincia(String provincia) {
 		this.provincia = provincia;
 	}
+	
+	/**
+	 * Metodo per acquisire la citta' della struttura
+	 * 
+	 * @return La citta' della struttura
+	 */
 	public String getCitta() {
 		return citta;
 	}
+	
+	/**
+	 * Metodo per settare la citta' della struttura
+	 * 
+	 * @param dataDiNascita Citta' della struttura
+	 */
 	public void setCitta(String citta) {
 		this.citta = citta;
 	}
+	
+	/**
+	 * Metodo per acquisire la via della struttura
+	 * 
+	 * @return La via della struttura
+	 */
 	public String getVia() {
 		return via;
 	}

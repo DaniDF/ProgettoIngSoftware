@@ -3,16 +3,30 @@ package it.ingsoft.model.turno;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import it.ingsoft.model.struttura.Struttura;
 import it.ingsoft.model.tempo.Tempo;
 
 public class Turno {
 	private int id;
+	private Struttura struttura; //TODO non c'era nel modello
 	private LocalDateTime inizio;
 	private LocalDateTime fine;
 	private int postiDisponibili;
 	private float prezzo;
 	private List<Tempo> tempi;
 	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {	//TODO trovare un metodo di identificazione valido
+		this.id = id;
+	}
+	public Struttura getStruttura() {
+		return struttura;
+	}
+	public void setStruttura(Struttura struttura) {
+		this.struttura = struttura;
+	}
 	public LocalDateTime getInizio() {
 		return inizio;
 	}
@@ -42,6 +56,21 @@ public class Turno {
 	}
 	public void setTempi(List<Tempo> tempi) {
 		this.tempi = tempi;
+	}
+	
+	public boolean isFinito()
+	{
+		return LocalDateTime.now().isAfter(fine);
+	}
+	
+	public void addTempo(Tempo tempo)
+	{
+		this.tempi.add(tempo);
+	}
+	
+	public void prenota()
+	{
+		this.postiDisponibili -= 1;
 	}
 	
 	@Override

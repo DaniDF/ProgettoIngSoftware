@@ -3,9 +3,16 @@ package it.ingsoft.model.tempo;
 import it.ingsoft.model.utente.Utente;
 
 public class Tempo {
+	private int idTempo;
 	private Utente utente;
 	private long valore;
 	
+	public int getIdTempo() {
+		return idTempo;
+	}
+	public void setIdTempo(int idTempo) {	//TODO trovare un metodo di identificazione valido
+		this.idTempo = idTempo;
+	}
 	public Utente getUtente() {
 		return utente;
 	}
