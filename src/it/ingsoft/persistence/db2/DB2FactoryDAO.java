@@ -1,6 +1,7 @@
 package it.ingsoft.persistence.db2;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
@@ -34,6 +35,10 @@ public class DB2FactoryDAO extends FactoryDAO {
 			DB_PASSWORD = fileReader.readLine();
 			
 			fileReader.close();
+			
+		} catch(FileNotFoundException e) { 
+			System.err.println("File configDB mancante: il file deve contenere username e passowrd scritti su due righe per poter connettersi al DB");
+			System.exit(-101);
 			
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
