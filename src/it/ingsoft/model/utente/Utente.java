@@ -251,7 +251,7 @@ public class Utente {
 					    this.numeroCivico.equals(objU.numeroCivico) &&
 					    this.cap.length == objU.cap.length;
 		
-		for(int cont = 0; !isEq && cont < this.cap.length; cont++)
+		for(int cont = 0; isEq && cont < this.cap.length; cont++)
 		{
 			isEq = this.cap[cont] == objU.cap[cont];
 		}

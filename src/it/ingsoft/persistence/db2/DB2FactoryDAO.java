@@ -1,5 +1,8 @@
 package it.ingsoft.persistence.db2;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -17,17 +20,28 @@ public class DB2FactoryDAO extends FactoryDAO {
 	
 	private static Connection CONNECTION;
 	
+	private static String DB_USERNAME = null;
+	private static String DB_PASSWORD = null;
+	
 	static
 	{
 		try {
 			Class.forName(DB2_DRIVER);
-		} catch (ClassNotFoundException e) {
+			
+			BufferedReader fileReader = new BufferedReader(new FileReader("configDB"));
+			
+			DB_USERNAME = fileReader.readLine();
+			DB_PASSWORD = fileReader.readLine();
+			
+			fileReader.close();
+			
+		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public static Connection createConnection() throws SQLException {
-		CONNECTION = DriverManager.getConnection(DB2_URL, null, null);
+		CONNECTION = DriverManager.getConnection(DB2_URL, DB_USERNAME, DB_PASSWORD);
 		return CONNECTION;
 	}
 

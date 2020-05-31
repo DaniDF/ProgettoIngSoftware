@@ -1,6 +1,7 @@
 package it.ingsoft.model.fattura;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import it.ingsoft.model.metodoPagamento.MetodoPagamento;
@@ -14,6 +15,11 @@ public class Fattura {
 	private Utente utente;
 	private Struttura struttura;
 	private List<Turno> acquisti;
+	
+	public Fattura()
+	{
+		this.acquisti = new ArrayList<>();
+	}
 	
 	public int getIdFattura() {
 		return idFattura;
@@ -77,14 +83,14 @@ public class Fattura {
 		if(isEq) objF = (Fattura)obj;
 		
 		isEq =  isEq && this.idFattura == objF.idFattura &&
-					    this.metodoPagamento.equals(objF.metodoPagamento) &&
+					    //this.metodoPagamento.equals(objF.metodoPagamento) && //TODO Cha facciamo qua'?
 					    this.utente.equals(objF.utente) &&
 					    this.struttura.equals(objF.struttura) &&
 					    this.acquisti.size() == objF.acquisti.size();
 		
-		for(int cont = 0; !isEq && cont < this.acquisti.size(); cont++)
+		for(int cont = 0; isEq && cont < this.acquisti.size(); cont++)
 		{
-			isEq = this.acquisti.get(cont) == objF.acquisti.get(cont);
+			isEq = this.acquisti.get(cont).equals(objF.acquisti.get(cont));
 		}
 		
 		return isEq;

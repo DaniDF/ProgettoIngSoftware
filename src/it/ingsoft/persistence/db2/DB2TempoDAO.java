@@ -10,6 +10,7 @@ import java.util.List;
 
 import it.ingsoft.model.tempo.Tempo;
 import it.ingsoft.model.tempo.TempoDAO;
+import it.ingsoft.model.turno.Turno;
 import it.ingsoft.model.utente.Utente;
 
 public class DB2TempoDAO implements TempoDAO {
@@ -19,9 +20,10 @@ public class DB2TempoDAO implements TempoDAO {
 		Connection connection = DB2FactoryDAO.createConnection();
 		
 		String query = "CREATE TABLE TEMPI (" +
-					   "IDTEMPO INT NOT NULL PRYMARY KEY," +
-					   "IDUTENTE VARCHAR(20) NOT NULL REFERENCES(UTENTE)," +
-					   "VALORE BIGINT NOT NULL;";
+					   "IDTEMPO INT NOT NULL PRIMARY KEY," +
+					   "IDUTENTE VARCHAR(20) NOT NULL REFERENCES UTENTE(CODICEFISCALE)," +
+					   "IDTURNO INT NOT NULL REFERENCES TURNI(IDTURNO), " +	//Aggiunto
+					   "VALORE BIGINT NOT NULL)";
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
@@ -32,7 +34,7 @@ public class DB2TempoDAO implements TempoDAO {
 	public void dropTable() throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
 		
-		String query = "DROP TABLE TEMPI;";
+		String query = "DROP TABLE TEMPI";
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
@@ -40,16 +42,18 @@ public class DB2TempoDAO implements TempoDAO {
 	}
 
 	@Override
-	public void insert(Tempo tempo) throws SQLException {
+	public void insert(Tempo tempo, Turno turno) throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
 		PreparedStatement prepStatement = connection.prepareStatement("INSERT INTO TEMPI (IDTEMPO, " +
 																						 "IDUTENTE, " +
-																						 "VALORE, " +
-																						 ") VALUES (?,?,?);");
+																						 "IDTURNO, " +	//Aggiunto
+																						 "VALORE" +
+																						 ") VALUES (?,?,?,?)");
 		
 		prepStatement.setInt(1, tempo.getIdTempo());
 		prepStatement.setString(2, tempo.getUtente().getCodiceFiscale());
-		prepStatement.setLong(3, tempo.getValore());
+		prepStatement.setInt(3, turno.getId());	//Aggiunto
+		prepStatement.setLong(4, tempo.getValore());
 		
 		prepStatement.executeUpdate();
 		DB2FactoryDAO.closeConnection();
@@ -60,8 +64,8 @@ public class DB2TempoDAO implements TempoDAO {
 		Connection connection = DB2FactoryDAO.createConnection();
 		PreparedStatement prepStatement = connection.prepareStatement("UPDATE TEMPI SET " +
 																					   "IDUTENTE = ?, " +
-																					   "VALORE = ?, " +
-																					   "WHERE IDTEMPO = ?;");
+																					   "VALORE = ? " +
+																					   "WHERE IDTEMPO = ?");
 		
 		prepStatement.setString(1, tempo.getUtente().getCodiceFiscale());
 		prepStatement.setLong(2, tempo.getValore());
@@ -75,7 +79,7 @@ public class DB2TempoDAO implements TempoDAO {
 	@Override
 	public void delete(Tempo tempo) throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
-		PreparedStatement prepStatement = connection.prepareStatement("DELETE FROM TEMPI WHERE IDTEMPO = ?;");
+		PreparedStatement prepStatement = connection.prepareStatement("DELETE FROM TEMPI WHERE IDTEMPO = ?");
 		
 		prepStatement.setInt(1, tempo.getIdTempo());
 		
@@ -86,18 +90,22 @@ public class DB2TempoDAO implements TempoDAO {
 	@Override
 	public Tempo get(int idTempo) throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
-		PreparedStatement prepStatement = connection.prepareStatement("SELECT * FROM TEMPI WHERE IDTEMPO = ?;");
+		PreparedStatement prepStatement = connection.prepareStatement("SELECT * FROM TEMPI WHERE IDTEMPO = ?");
+
+		prepStatement.setInt(1, idTempo);
 		
 		ResultSet resS = prepStatement.executeQuery();
-		if(!resS.isLast()) throw new SQLException("Not unique identifier: multiple response");
+		if(!resS.next()) throw new SQLException("No result");
 		
 		Tempo result = new Tempo();
 		
-		Utente utente = new DB2FactoryDAO().getUtenteDAO().get(resS.getString("CODICEFISCALE"));
+		Utente utente = new DB2FactoryDAO().getUtenteDAO().get(resS.getString("IDUTENTE"));
 		
 		result.setIdTempo(idTempo);
 		result.setUtente(utente);
 		result.setValore(resS.getLong("VALORE"));
+
+		if(resS.next()) throw new SQLException("Not unique identifier: multiple response");
 		
 		return result;
 	}
@@ -108,7 +116,9 @@ public class DB2TempoDAO implements TempoDAO {
 		List<Tempo> result = new ArrayList<>();
 		
 		Connection connection = DB2FactoryDAO.createConnection();
-		PreparedStatement prepStatement = connection.prepareStatement("SELECT IDTEMPO FROM TEMPI WHERE IDTURNO = ?;");
+		PreparedStatement prepStatement = connection.prepareStatement("SELECT IDTEMPO FROM TEMPI WHERE IDTURNO = ?");
+
+		prepStatement.setInt(1, idTurno);		
 		
 		ResultSet resS = prepStatement.executeQuery();
 		

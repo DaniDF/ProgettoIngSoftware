@@ -18,18 +18,18 @@ public class DB2UtenteDAO implements UtenteDAO {
 		Connection connection = DB2FactoryDAO.createConnection();
 		
 		String query = "CREATE TABLE UTENTE (" +
-					   "CODICEFISCALE VARCHAR(20) NOT NULL PRYMARY KEY," +
+					   "CODICEFISCALE VARCHAR(20) NOT NULL PRIMARY KEY," +
 					   "NOME VARCHAR(20) NOT NULL," +
 					   "COGNOME VARCHAR(20) NOT NULL," +
 					   "DATADINASCITA DATE NOT NULL," +
 					   "LUOGODINASCITA VARCHAR(20) NOT NULL," +
-					   "NUMRODITELEFONO VARCHAR(20) NOT NULL," +
+					   "NUMERODITELEFONO VARCHAR(20) NOT NULL," +
 					   "NAZIONE VARCHAR(20) NOT NULL," +
 					   "PROVINCIA VARCHAR(20) NOT NULL," +
 					   "CITTA VARCHAR(20) NOT NULL," +
 					   "VIA VARCHAR(50) NOT NULL," +
-					   "NUMROCIVICO VARCHAR(5) NOT NULL," +
-					   "CAP CHAR(5) NOT NULL);";
+					   "NUMEROCIVICO VARCHAR(5) NOT NULL," +
+					   "CAP VARCHAR(5) NOT NULL)";
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
@@ -40,10 +40,10 @@ public class DB2UtenteDAO implements UtenteDAO {
 	public void dropTable() throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
 		
-		String query = "DROP TABLE UTENTI;";
+		String query = "DROP TABLE UTENTE";
 		
 		Statement statement = connection.createStatement();
-		statement.execute(query);
+		statement.executeUpdate(query);
 		DB2FactoryDAO.closeConnection();
 	}
 
@@ -62,7 +62,7 @@ public class DB2UtenteDAO implements UtenteDAO {
 																						  "VIA, " +
 																						  "NUMEROCIVICO, " +
 																						  "CAP" +
-																						  ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?);");
+																						  ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
 		
 		Date dataDiNascita = Date.valueOf(utente.getDataDiNascita());
 		String cap = String.copyValueOf(utente.getCap());
@@ -99,7 +99,7 @@ public class DB2UtenteDAO implements UtenteDAO {
 																						"VIA = ?, " +
 																						"NUMEROCIVICO = ?, " +
 																						"CAP = ?" +
-																						"WHERE CODICEFISCALE = ?;");
+																						"WHERE CODICEFISCALE = ?");
 		
 		Date dataDiNascita = Date.valueOf(utente.getDataDiNascita());
 		String cap = String.copyValueOf(utente.getCap());
@@ -126,7 +126,7 @@ public class DB2UtenteDAO implements UtenteDAO {
 	@Override
 	public void delete(Utente utente) throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
-		PreparedStatement prepStatement = connection.prepareStatement("DELETE FROM UTENTE WHERE CODICEFISCALE = ?;");
+		PreparedStatement prepStatement = connection.prepareStatement("DELETE FROM UTENTE WHERE CODICEFISCALE = ?");
 		
 		prepStatement.setString(1, utente.getCodiceFiscale());
 		
@@ -137,10 +137,12 @@ public class DB2UtenteDAO implements UtenteDAO {
 	@Override
 	public Utente get(String codiceFiscale) throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
-		PreparedStatement prepStatement = connection.prepareStatement("SELECT * FROM UTENTE WHERE CODICEFISCALE = ?;");
+		PreparedStatement prepStatement = connection.prepareStatement("SELECT * FROM UTENTE WHERE CODICEFISCALE = ?");
+		
+		prepStatement.setString(1, codiceFiscale);
 		
 		ResultSet resS = prepStatement.executeQuery();
-		if(!resS.isLast()) throw new SQLException("Not unique identifier: multiple response");
+		if(!resS.next()) throw new SQLException("No result");
 		
 		Utente result = new Utente();
 		
@@ -159,6 +161,8 @@ public class DB2UtenteDAO implements UtenteDAO {
 		result.setVia(resS.getString("VIA"));
 		result.setNumeroCivico(resS.getString("NUMEROCIVICO"));
 		result.setCap(cap);
+		
+		if(resS.next()) throw new SQLException("Not unique identifier: multiple response");
 		
 		return result;
 	}

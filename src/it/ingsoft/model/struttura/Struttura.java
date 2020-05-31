@@ -1,6 +1,7 @@
 package it.ingsoft.model.struttura;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import it.ingsoft.model.turno.Turno;
@@ -17,6 +18,11 @@ public class Struttura {
 	private String numeroCivico;
 	private char[] cap;
 	private List<Turno> turni;
+	
+	public Struttura()
+	{
+		this.turni = new ArrayList<>();
+	}
 	
 	/**
 	 * Metodo per acquisire il nome della struttura
@@ -198,9 +204,9 @@ public class Struttura {
 			isEq = this.cap[cont] == objS.cap[cont];
 		}
 		
-		for(int cont = 0; !isEq && cont < this.turni.size(); cont++)
+		for(int cont = 0; isEq && cont < this.turni.size(); cont++)
 		{
-			isEq = this.turni.get(cont) == objS.turni.get(cont);
+			isEq = this.turni.get(cont).equals(objS.turni.get(cont));
 		}
 		
 		return isEq;

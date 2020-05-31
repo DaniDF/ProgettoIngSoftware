@@ -20,9 +20,10 @@ public class DB2FatturaDAO implements FatturaDAO {
 		Connection connection = DB2FactoryDAO.createConnection();
 		
 		String query = "CREATE TABLE FATTURA (" +
-					   "IDFATTURA INT NOT NULL PRYMARY KEY," +
-					   "IDTURNO INT NOT NULL REFERENCES(TURNO)," +
-					   "IDUTENTE VARCHAR(20) NOT NULL REFERENCES(UTENTE);";
+					   "IDFATTURA INT NOT NULL," +
+					   "IDTURNO INT NOT NULL REFERENCES TURNI(IDTURNO)," +
+					   "IDUTENTE VARCHAR(20) NOT NULL REFERENCES UTENTE(CODICEFISCALE)," +
+					   "CONSTRAINT PK PRIMARY KEY(IDFATTURA,IDTURNO) )";
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
@@ -33,7 +34,7 @@ public class DB2FatturaDAO implements FatturaDAO {
 	public void dropTable() throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
 		
-		String query = "DROP TABLE FATTURA;";
+		String query = "DROP TABLE FATTURA";
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
@@ -43,14 +44,13 @@ public class DB2FatturaDAO implements FatturaDAO {
 	@Override
 	public void insert(Fattura fattura) throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
+		PreparedStatement prepStatement = connection.prepareStatement("INSERT INTO FATTURA (IDFATTURA, " +
+																						   "IDTURNO, " +
+																						   "IDUTENTE" +
+																						   ") VALUES (?,?,?)");
 		
 		for(Turno t : fattura.getAcquisti())
-		{
-			PreparedStatement prepStatement = connection.prepareStatement("INSERT INTO TURNI (IDFATTURA, " +
-																							 "IDTURNO, " +
-																							 "IDUTENTE, " +
-																							 ") VALUES (?,?,?);");
-			
+		{			
 			prepStatement.setInt(1, fattura.getIdFattura());
 			prepStatement.setInt(2, t.getId());
 			prepStatement.setString(3, fattura.getUtente().getCodiceFiscale());
@@ -64,16 +64,15 @@ public class DB2FatturaDAO implements FatturaDAO {
 	@Override @Deprecated
 	public void update(Fattura fattura) throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
+		PreparedStatement prepStatement = connection.prepareStatement("UPDATE FATTURA SET " +
+																					   "IDUTENTE = ? " +
+																					   "WHERE IDFATTURA = ? AND IDTURNO = ?");
 		
 		for(Turno t : fattura.getAcquisti())
 		{
-			PreparedStatement prepStatement = connection.prepareStatement("UPDATE TEMPI SET " +
-																						   "IDTURNO = ?, " +
-																						   "WHERE IDFATTURA = ? AND IDUTENTE = ?;");
-			
-			prepStatement.setInt(1, t.getId());
+			prepStatement.setString(1, fattura.getUtente().getCodiceFiscale());
 			prepStatement.setInt(2, fattura.getIdFattura());
-			prepStatement.setString(3, fattura.getUtente().getCodiceFiscale());
+			prepStatement.setInt(3, t.getId());
 			
 			prepStatement.executeUpdate();
 		}
@@ -85,7 +84,7 @@ public class DB2FatturaDAO implements FatturaDAO {
 	@Override
 	public void delete(Fattura fattura) throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
-		PreparedStatement prepStatement = connection.prepareStatement("DELETE FROM FATTURA WHERE IDFATTURA = ?;");
+		PreparedStatement prepStatement = connection.prepareStatement("DELETE FROM FATTURA WHERE IDFATTURA = ?");
 		
 		prepStatement.setInt(1, fattura.getIdFattura());
 		
@@ -96,7 +95,9 @@ public class DB2FatturaDAO implements FatturaDAO {
 	@Override
 	public Fattura get(int idFattura) throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
-		PreparedStatement prepStatement = connection.prepareStatement("SELECT * FROM FATTURA WHERE IDFATTURA = ?;");
+		PreparedStatement prepStatement = connection.prepareStatement("SELECT * FROM FATTURA WHERE IDFATTURA = ?");
+
+		prepStatement.setInt(1, idFattura);
 		
 		ResultSet resS = prepStatement.executeQuery();
 		

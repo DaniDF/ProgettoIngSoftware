@@ -1,6 +1,7 @@
 package it.ingsoft.model.turno;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import it.ingsoft.model.struttura.Struttura;
@@ -14,6 +15,11 @@ public class Turno {
 	private int postiDisponibili;
 	private float prezzo;
 	private List<Tempo> tempi;
+	
+	public Turno()
+	{
+		this.tempi = new ArrayList<>();
+	}
 	
 	public int getId() {
 		return id;
@@ -81,14 +87,15 @@ public class Turno {
 		if(isEq) objT = (Turno)obj;
 		
 		isEq =  isEq && this.id == objT.id &&
-					    this.inizio.equals(objT.fine) &&
+					    this.inizio.equals(objT.inizio) &&
+					    this.fine.equals(objT.fine) &&
 					    this.postiDisponibili == objT.postiDisponibili &&
 					    this.prezzo == objT.prezzo &&
 					    this.tempi.size() == objT.tempi.size();
 		
-		for(int cont = 0; !isEq && cont < this.tempi.size(); cont++)
+		for(int cont = 0; isEq && cont < this.tempi.size(); cont++)
 		{
-			isEq = this.tempi.get(cont) == objT.tempi.get(cont);
+			isEq = this.tempi.get(cont).equals(objT.tempi.get(cont));
 		}
 		
 		return isEq;

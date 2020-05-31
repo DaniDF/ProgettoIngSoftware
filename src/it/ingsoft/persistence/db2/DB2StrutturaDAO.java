@@ -17,16 +17,16 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 		Connection connection = DB2FactoryDAO.createConnection();
 		
 		String query = "CREATE TABLE STRUTTURA (" +
-					   "PARTITAIVA VARCHAR(30) NOT NULL PRYMARY KEY," +
+					   "PARTITAIVA VARCHAR(30) NOT NULL PRIMARY KEY," +
 					   "NOMESTRUTTURA VARCHAR(20) NOT NULL," +
-					   "FOTOFATTURAVALIDA VARCHAR(20) NOT NULL," +
-					   "IBAN DATE NOT NULL," +
+					   "FOTOFATTURAVALIDA VARCHAR(500) NOT NULL," +
+					   "IBAN VARCHAR(30) NOT NULL," +
 					   "NAZIONE VARCHAR(20) NOT NULL," +
 					   "PROVINCIA VARCHAR(20) NOT NULL," +
 					   "CITTA VARCHAR(20) NOT NULL," +
 					   "VIA VARCHAR(50) NOT NULL," +
-					   "NUMROCIVICO VARCHAR(5) NOT NULL," +
-					   "CAP CHAR(5) NOT NULL);";
+					   "NUMEROCIVICO VARCHAR(5) NOT NULL," +
+					   "CAP VARCHAR(5) NOT NULL)";
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
@@ -37,7 +37,7 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 	public void dropTable() throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
 		
-		String query = "DROP TABLE STRUTTURA;";
+		String query = "DROP TABLE STRUTTURA";
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
@@ -57,7 +57,7 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 																							 "VIA, " +
 																							 "NUMEROCIVICO, " +
 																							 "CAP" +
-																							 ") VALUES (?,?,?,?,?,?,?,?,?,?);");
+																							 ") VALUES (?,?,?,?,?,?,?,?,?,?)");
 		
 		String cap = String.copyValueOf(struttura.getCap());
 		
@@ -89,7 +89,7 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 																						"VIA = ?, " +
 																						"NUMEROCIVICO = ?, " +
 																						"CAP = ?" +
-																						"WHERE PARTITAIVA = ?;");
+																						"WHERE PARTITAIVA = ?");
 		
 		String cap = String.copyValueOf(struttura.getCap());
 		
@@ -112,7 +112,7 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 	@Override
 	public void delete(Struttura struttura) throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
-		PreparedStatement prepStatement = connection.prepareStatement("DELETE FROM STRUTTURA WHERE PARTITAIVA = ?;");
+		PreparedStatement prepStatement = connection.prepareStatement("DELETE FROM STRUTTURA WHERE PARTITAIVA = ?");
 		
 		prepStatement.setString(1, struttura.getPartitaIva());
 		
@@ -123,18 +123,20 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 	@Override
 	public Struttura get(String partitaIva) throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
-		PreparedStatement prepStatement = connection.prepareStatement("SELECT * FROM STRUTTURA WHERE PARTITAIVA = ?;");
+		PreparedStatement prepStatement = connection.prepareStatement("SELECT * FROM STRUTTURA WHERE PARTITAIVA = ?");
+		
+		prepStatement.setString(1, partitaIva);
 		
 		ResultSet resS = prepStatement.executeQuery();
-		if(!resS.isLast()) throw new SQLException("Not unique identifier: multiple response");
+		if(!resS.next()) throw new SQLException("No result");
 		
 		Struttura result = new Struttura();
 		
 		char[] cap = resS.getString("CAP").toCharArray();
 		
 		result.setPartitaIva(partitaIva);
-		result.setNomeStruttura(resS.getString("NOME"));
-		result.setFotoFatturaValida(new File(resS.getString("COGNOME")));
+		result.setNomeStruttura(resS.getString("NOMESTRUTTURA"));
+		result.setFotoFatturaValida(new File(resS.getString("FOTOFATTURAVALIDA")));
 		result.setIban(resS.getString("IBAN"));
 		result.setNazione(resS.getString("NAZIONE"));
 		result.setProvincia(resS.getString("PROVINCIA"));
@@ -142,6 +144,8 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 		result.setVia(resS.getString("VIA"));
 		result.setNumeroCivico(resS.getString("NUMEROCIVICO"));
 		result.setCap(cap);
+		
+		if(resS.next()) throw new SQLException("Not unique identifier: multiple response");
 		
 		return result;
 	}
