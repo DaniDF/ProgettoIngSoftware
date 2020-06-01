@@ -73,7 +73,7 @@ public class TestMainFattura {
 		
 		String flagMsg = null;
 		
-		FactoryDAO factory = FactoryDAO.getDAOFactory(DBInstance.DB2);
+		FactoryDAO factory = FactoryDAO.getDAOFactory(DBInstance.MYSQL);
 		
 		try
 		{

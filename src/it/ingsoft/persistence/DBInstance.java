@@ -1,5 +1,5 @@
 package it.ingsoft.persistence;
 
 public enum DBInstance {
-	DB2;
+	DB2,MYSQL;
 }

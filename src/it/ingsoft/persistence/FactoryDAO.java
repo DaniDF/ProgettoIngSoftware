@@ -8,6 +8,7 @@ import it.ingsoft.model.tempo.TempoDAO;
 import it.ingsoft.model.turno.TurnoDAO;
 import it.ingsoft.model.utente.UtenteDAO;
 import it.ingsoft.persistence.db2.DB2FactoryDAO;
+import it.ingsoft.persistence.mysql.MySQLFactoryDAO;
 
 public abstract class FactoryDAO {
 
@@ -15,6 +16,7 @@ public abstract class FactoryDAO {
 	{
 		FactoryDAO result = null;
 		if(daoInstance.equals(DBInstance.DB2)) result = new DB2FactoryDAO();
+		else if(daoInstance.equals(DBInstance.MYSQL)) result = new MySQLFactoryDAO();
 		else result = new DB2FactoryDAO();
 			
 		return result;
