@@ -7,4 +7,10 @@
 		<db-username>ProgettoIngSoftware</db-username>
 		<db-password>pis</db-password>
 	</db-instance>
+	
+	<db-instance type="DB2">
+		<db-url>db2://diva.deis.unibo.it:50000/tw_stud</db-url>
+		<db-username>00830325</db-username>
+		<db-password>ForzaVale46</db-password>
+	</db-instance>
 </db>

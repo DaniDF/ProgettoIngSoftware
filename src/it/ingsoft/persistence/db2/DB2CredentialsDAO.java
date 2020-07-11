@@ -12,6 +12,23 @@ import it.ingsoft.model.security.CredentialsDAO;
 
 public class DB2CredentialsDAO implements CredentialsDAO {
 
+	static
+	{
+		try
+		{
+			Connection connection = DB2FactoryDAO.createConnection();
+			Statement statement = connection.prepareStatement("CREATE TABLE CREDENTIALS ("
+																	+ "USERNAME VARCHAR(255) NOT NULL PRIMARY KEY, "
+																	+ "PASSWORD VARCHAR(255) NOT NULL )");
+			
+			statement.close();
+			DB2FactoryDAO.closeConnection(connection);
+			
+		} catch (SQLException e) {
+			System.err.println("DB credenziali gia presente");
+		}
+	}
+	
 	@Override
 	public boolean checkCredentials(String username, String password) throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();

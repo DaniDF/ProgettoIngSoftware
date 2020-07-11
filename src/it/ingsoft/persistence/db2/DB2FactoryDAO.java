@@ -16,6 +16,7 @@ import it.ingsoft.model.fattura.FatturaDAO;
 import it.ingsoft.model.relations.FatturaTurnoMappingDAO;
 import it.ingsoft.model.relations.StrutturaTurnoMappingDAO;
 import it.ingsoft.model.relations.TurnoTempoMappingDAO;
+import it.ingsoft.model.relations.UtenteCredentialsMappingDAO;
 import it.ingsoft.model.relations.UtenteFatturaMappingDAO;
 import it.ingsoft.model.relations.UtenteTempoMappingDAO;
 import it.ingsoft.model.security.CredentialsDAO;
@@ -120,5 +121,10 @@ public class DB2FactoryDAO extends FactoryDAO {
 	@Override
 	public UtenteFatturaMappingDAO getUtenteFatturaMappingDAO() throws SQLException {
 		return new DB2UtenteFatturaMappingDAO();
+	}
+
+	@Override
+	public UtenteCredentialsMappingDAO getUtenteCredentialsMappingDAO() throws SQLException {
+		return new DB2UtenteCredentialsMappingDAO();
 	}
 }

@@ -6,6 +6,7 @@ import it.ingsoft.model.fattura.FatturaDAO;
 import it.ingsoft.model.relations.FatturaTurnoMappingDAO;
 import it.ingsoft.model.relations.StrutturaTurnoMappingDAO;
 import it.ingsoft.model.relations.TurnoTempoMappingDAO;
+import it.ingsoft.model.relations.UtenteCredentialsMappingDAO;
 import it.ingsoft.model.relations.UtenteFatturaMappingDAO;
 import it.ingsoft.model.relations.UtenteTempoMappingDAO;
 import it.ingsoft.model.security.CredentialsDAO;
@@ -14,7 +15,6 @@ import it.ingsoft.model.tempo.TempoDAO;
 import it.ingsoft.model.turno.TurnoDAO;
 import it.ingsoft.model.utente.UtenteDAO;
 import it.ingsoft.persistence.db2.DB2FactoryDAO;
-import it.ingsoft.persistence.mysql.MySQLFactoryDAO;
 
 public abstract class FactoryDAO {
 
@@ -22,7 +22,7 @@ public abstract class FactoryDAO {
 	{
 		FactoryDAO result = null;
 		if(daoInstance.equals(DBInstance.DB2)) result = new DB2FactoryDAO();
-		else if(daoInstance.equals(DBInstance.MYSQL)) result = new MySQLFactoryDAO();
+		//else if(daoInstance.equals(DBInstance.MYSQL)) result = new MySQLFactoryDAO();
 		else result = new DB2FactoryDAO();
 			
 		return result;
@@ -39,4 +39,5 @@ public abstract class FactoryDAO {
 	public abstract UtenteTempoMappingDAO getUtenteTempoMappingDAO() throws SQLException;
 	public abstract FatturaTurnoMappingDAO getFatturaTurnoMappingDAO() throws SQLException;
 	public abstract UtenteFatturaMappingDAO getUtenteFatturaMappingDAO() throws SQLException;
+	public abstract UtenteCredentialsMappingDAO getUtenteCredentialsMappingDAO() throws SQLException;
 }

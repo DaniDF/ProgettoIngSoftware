@@ -25,7 +25,8 @@ public class DB2UtenteTempoMappingDAO implements UtenteTempoMappingDAO {
 								+ "UTENTE VARCHAR(20) NOT NULL REFERENCES UTENTE(CODICEFISCALE), "
 								+ "TEMPO INT NOT NULL REFERENCES TEMPI(IDTEMPO), "
 								+ "CONSTRAINT PK PRIMARY KEY (UTENTE,TEMPO))");
-		
+
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -35,7 +36,8 @@ public class DB2UtenteTempoMappingDAO implements UtenteTempoMappingDAO {
 		Statement statement = connection.createStatement();
 		
 		statement.execute("DROP TABLE UTENTE_TEMPO_MAPPING");
-		
+
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -51,7 +53,8 @@ public class DB2UtenteTempoMappingDAO implements UtenteTempoMappingDAO {
 		prepStatement.setInt(2, tempo.getIdTempo());
 		
 		prepStatement.execute();
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -65,7 +68,8 @@ public class DB2UtenteTempoMappingDAO implements UtenteTempoMappingDAO {
 		prepStatement.setInt(2, tempo.getIdTempo());
 		
 		prepStatement.execute();
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -85,7 +89,8 @@ public class DB2UtenteTempoMappingDAO implements UtenteTempoMappingDAO {
 			
 			if(newTempo != null) result.add(newTempo);
 		}
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;
@@ -103,7 +108,8 @@ public class DB2UtenteTempoMappingDAO implements UtenteTempoMappingDAO {
 		
 		UtenteDAO utenteDAO = DB2FactoryDAO.getDAOFactory(DBInstance.DB2).getUtenteDAO();
 		Utente result = utenteDAO.get(resS.getString("UTENTE"));
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;

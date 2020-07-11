@@ -26,7 +26,8 @@ public class DB2UtenteFatturaMappingDAO implements UtenteFatturaMappingDAO {
 								+ "UTENTE VARCHAR(20) NOT NULL REFERENCES UTENTE(CODICEFISCALE), "
 								+ "FATTURA INT NOT NULL REFERENCES FATTURA(IDFATTURA), "
 								+ "CONSTRAINT PK PRIMARY KEY (UTENTE,FATTURA))");
-		
+
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -36,7 +37,8 @@ public class DB2UtenteFatturaMappingDAO implements UtenteFatturaMappingDAO {
 		Statement statement = connection.createStatement();
 		
 		statement.execute("DROP TABLE UTENTE_FATTURA_MAPPING");
-		
+
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -53,6 +55,7 @@ public class DB2UtenteFatturaMappingDAO implements UtenteFatturaMappingDAO {
 		
 		prepStatement.execute();
 		
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -66,7 +69,8 @@ public class DB2UtenteFatturaMappingDAO implements UtenteFatturaMappingDAO {
 		prepStatement.setInt(2, fattura.getIdFattura());
 		
 		prepStatement.execute();
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -86,7 +90,8 @@ public class DB2UtenteFatturaMappingDAO implements UtenteFatturaMappingDAO {
 			
 			if(newFattura != null) result.add(newFattura);
 		}
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;
@@ -104,7 +109,8 @@ public class DB2UtenteFatturaMappingDAO implements UtenteFatturaMappingDAO {
 		
 		UtenteDAO utenteDAO = DB2FactoryDAO.getDAOFactory(DBInstance.DB2).getUtenteDAO();
 		Utente result = utenteDAO.get(resS.getString("UTENTE"));
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;

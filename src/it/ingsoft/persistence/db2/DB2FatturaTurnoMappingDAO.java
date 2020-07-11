@@ -26,7 +26,8 @@ public class DB2FatturaTurnoMappingDAO implements FatturaTurnoMappingDAO {
 								+ "FATTURA INT NOT NULL REFERENCES FATTURA(IDFATTURA), "
 								+ "TURNO INT NOT NULL REFERENCES TURNI(IDTURNO), "
 								+ "CONSTRAINT PK PRIMARY KEY (FATTURA,TURNO))");
-		
+
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -36,7 +37,8 @@ public class DB2FatturaTurnoMappingDAO implements FatturaTurnoMappingDAO {
 		Statement statement = connection.createStatement();
 		
 		statement.execute("DROP TABLE FATTURA_TURNO_MAPPING");
-		
+
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -52,7 +54,8 @@ public class DB2FatturaTurnoMappingDAO implements FatturaTurnoMappingDAO {
 		prepStatement.setInt(2, turno.getId());
 		
 		prepStatement.execute();
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -66,7 +69,8 @@ public class DB2FatturaTurnoMappingDAO implements FatturaTurnoMappingDAO {
 		prepStatement.setInt(2, turno.getId());
 		
 		prepStatement.execute();
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -86,7 +90,8 @@ public class DB2FatturaTurnoMappingDAO implements FatturaTurnoMappingDAO {
 			
 			if(newTurno != null) result.add(newTurno);
 		}
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;
@@ -104,7 +109,8 @@ public class DB2FatturaTurnoMappingDAO implements FatturaTurnoMappingDAO {
 		
 		FatturaDAO fatturaDAO = DB2FactoryDAO.getDAOFactory(DBInstance.DB2).getFatturaDAO();
 		Fattura result = fatturaDAO.get(resS.getInt("FATTURA"));
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;

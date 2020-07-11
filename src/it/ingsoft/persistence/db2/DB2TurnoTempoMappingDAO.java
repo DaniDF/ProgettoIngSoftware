@@ -25,7 +25,8 @@ public class DB2TurnoTempoMappingDAO implements TurnoTempoMappingDAO {
 								+ "TURNO INT NOT NULL REFERENCES TURNI(IDTURNO), "
 								+ "TEMPO INT NOT NULL REFERENCES TEMPI(IDTEMPO), "
 								+ "CONSTRAINT PK PRIMARY KEY (TURNO,TEMPO))");
-		
+
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -35,7 +36,8 @@ public class DB2TurnoTempoMappingDAO implements TurnoTempoMappingDAO {
 		Statement statement = connection.createStatement();
 		
 		statement.execute("DROP TABLE TURNO_TEMPO_MAPPING");
-		
+
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -51,7 +53,8 @@ public class DB2TurnoTempoMappingDAO implements TurnoTempoMappingDAO {
 		prepStatement.setInt(2, tempo.getIdTempo());
 		
 		prepStatement.execute();
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -65,7 +68,8 @@ public class DB2TurnoTempoMappingDAO implements TurnoTempoMappingDAO {
 		prepStatement.setInt(2, tempo.getIdTempo());
 		
 		prepStatement.execute();
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -85,7 +89,8 @@ public class DB2TurnoTempoMappingDAO implements TurnoTempoMappingDAO {
 			
 			if(newTempo != null) result.add(newTempo);
 		}
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;
@@ -103,7 +108,8 @@ public class DB2TurnoTempoMappingDAO implements TurnoTempoMappingDAO {
 		
 		TurnoDAO turnoDAO = DB2FactoryDAO.getDAOFactory(DBInstance.DB2).getTurnoDAO();
 		Turno result = turnoDAO.get(resS.getInt("TURNO"));
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;

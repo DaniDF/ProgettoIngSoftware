@@ -10,6 +10,7 @@ import java.time.LocalDate;
 
 import it.ingsoft.model.utente.Utente;
 import it.ingsoft.model.utente.UtenteDAO;
+import it.ingsoft.persistence.db2.proxy.DB2UtenteProxy;
 
 public class DB2UtenteDAO implements UtenteDAO {
 
@@ -33,6 +34,8 @@ public class DB2UtenteDAO implements UtenteDAO {
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
+
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -44,6 +47,8 @@ public class DB2UtenteDAO implements UtenteDAO {
 		
 		Statement statement = connection.createStatement();
 		statement.executeUpdate(query);
+
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -83,6 +88,8 @@ public class DB2UtenteDAO implements UtenteDAO {
 		prepStatement.setString(12, cap);
 		
 		prepStatement.executeUpdate();
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -123,6 +130,8 @@ public class DB2UtenteDAO implements UtenteDAO {
 		prepStatement.setString(12, utente.getCodiceFiscale());
 		
 		prepStatement.executeUpdate();
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 		
 	}
@@ -135,6 +144,8 @@ public class DB2UtenteDAO implements UtenteDAO {
 		prepStatement.setString(1, utente.getCodiceFiscale());
 		
 		prepStatement.executeUpdate();
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -148,12 +159,11 @@ public class DB2UtenteDAO implements UtenteDAO {
 		ResultSet resS = prepStatement.executeQuery();
 		if(!resS.next()) throw new SQLException("No result");
 		
-		Utente result = new Utente();
+		Utente result = new DB2UtenteProxy(codiceFiscale);
 		
 		LocalDate dataDiNascita = resS.getDate("DATADINASCITA").toLocalDate();
 		char[] cap = resS.getString("CAP").toCharArray();
 		
-		result.setCodiceFiscale(codiceFiscale);
 		result.setNome(resS.getString("NOME"));
 		result.setCognome(resS.getString("COGNOME"));
 		result.setDataDiNascita(dataDiNascita);
@@ -168,6 +178,7 @@ public class DB2UtenteDAO implements UtenteDAO {
 		
 		if(resS.next()) throw new SQLException("Not unique identifier: multiple response");
 		
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;

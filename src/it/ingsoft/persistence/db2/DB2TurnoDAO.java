@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 
 import it.ingsoft.model.turno.Turno;
 import it.ingsoft.model.turno.TurnoDAO;
+import it.ingsoft.persistence.db2.proxy.DB2TurnoProxy;
 
 public class DB2TurnoDAO implements TurnoDAO {
 
@@ -29,6 +30,8 @@ public class DB2TurnoDAO implements TurnoDAO {
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
+
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -40,6 +43,8 @@ public class DB2TurnoDAO implements TurnoDAO {
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
+
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -75,6 +80,8 @@ public class DB2TurnoDAO implements TurnoDAO {
 		prepStatement.setFloat(7, turno.getPrezzo());
 		
 		prepStatement.executeUpdate();
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -110,6 +117,8 @@ public class DB2TurnoDAO implements TurnoDAO {
 		prepStatement.setFloat(7, turno.getPrezzo());
 		
 		prepStatement.executeUpdate();
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -121,6 +130,8 @@ public class DB2TurnoDAO implements TurnoDAO {
 		prepStatement.setInt(1, turno.getId());
 		
 		prepStatement.executeUpdate();
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -134,7 +145,7 @@ public class DB2TurnoDAO implements TurnoDAO {
 		ResultSet resS = prepStatement.executeQuery();
 		if(!resS.next()) throw new SQLException("No result");
 		
-		Turno result = new Turno();
+		Turno result = new DB2TurnoProxy(idTurno);
 		
 		Date datIn = resS.getDate("DATAINIZIO");
 		Time oraIn = resS.getTime("ORAINIZIO");
@@ -147,14 +158,14 @@ public class DB2TurnoDAO implements TurnoDAO {
 		try { inizio = LocalDateTime.of(datIn.toLocalDate(), oraIn.toLocalTime()); } catch(NullPointerException e) { inizio = null; }
 		try { fine = LocalDateTime.of(datFi.toLocalDate(), oraFi.toLocalTime()); } catch(NullPointerException e) { fine = null; }
 		
-		result.setId(idTurno);
 		result.setInizio(inizio);
 		result.setFine(fine);
 		result.setPostiDisponibili(resS.getInt("POSTIDISPONIBILI"));
 		result.setPrezzo(resS.getFloat("PREZZO"));
 
 		if(resS.next()) throw new SQLException("Not unique identifier: multiple response");
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;

@@ -5,11 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 
 import it.ingsoft.model.fattura.Fattura;
 import it.ingsoft.model.fattura.FatturaDAO;
-import it.ingsoft.model.turno.Turno;
+import it.ingsoft.persistence.db2.proxy.DB2FatturaProxy;
 
 public class DB2FatturaDAO implements FatturaDAO {
 
@@ -22,6 +21,7 @@ public class DB2FatturaDAO implements FatturaDAO {
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -33,6 +33,7 @@ public class DB2FatturaDAO implements FatturaDAO {
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -46,6 +47,7 @@ public class DB2FatturaDAO implements FatturaDAO {
 		
 		prepStatement.executeUpdate();
 		
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -60,6 +62,7 @@ public class DB2FatturaDAO implements FatturaDAO {
 		
 		prepStatement.executeUpdate();
 		
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -71,6 +74,8 @@ public class DB2FatturaDAO implements FatturaDAO {
 		prepStatement.setInt(1, fattura.getIdFattura());
 		
 		prepStatement.executeUpdate();
+		
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -84,13 +89,11 @@ public class DB2FatturaDAO implements FatturaDAO {
 		ResultSet resS = prepStatement.executeQuery();
 		if(!resS.next()) throw new SQLException("No result");
 		
-		Fattura result = new Fattura();
-		result.setAcquisti(new ArrayList<Turno>());
-		
-		result.setIdFattura(resS.getInt("IDFATTURA"));
+		Fattura result = new DB2FatturaProxy(resS.getInt("IDFATTURA"));
 		
 		if(resS.next()) throw new SQLException("Not unique identifier: multiple response");
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;

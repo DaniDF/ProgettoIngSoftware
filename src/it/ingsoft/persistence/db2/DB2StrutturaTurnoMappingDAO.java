@@ -26,7 +26,8 @@ public class DB2StrutturaTurnoMappingDAO implements StrutturaTurnoMappingDAO {
 								+ "STRUTTURA VARCHAR(30) NOT NULL REFERENCES STRUTTURA(PARTITAIVA), "
 								+ "TURNO INT NOT NULL REFERENCES TURNI(IDTURNO), "
 								+ "CONSTRAINT PK PRIMARY KEY (STRUTTURA,TURNO))");
-		
+
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -36,7 +37,8 @@ public class DB2StrutturaTurnoMappingDAO implements StrutturaTurnoMappingDAO {
 		Statement statement = connection.createStatement();
 		
 		statement.execute("DROP TABLE STRUTTURA_TURNO_MAPPING");
-		
+
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -52,7 +54,8 @@ public class DB2StrutturaTurnoMappingDAO implements StrutturaTurnoMappingDAO {
 		prepStatement.setInt(2, turno.getId());
 		
 		prepStatement.execute();
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -66,7 +69,8 @@ public class DB2StrutturaTurnoMappingDAO implements StrutturaTurnoMappingDAO {
 		prepStatement.setInt(2, turno.getId());
 		
 		prepStatement.execute();
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -86,7 +90,8 @@ public class DB2StrutturaTurnoMappingDAO implements StrutturaTurnoMappingDAO {
 			
 			if(newTurno != null) result.add(newTurno);
 		}
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;
@@ -104,7 +109,8 @@ public class DB2StrutturaTurnoMappingDAO implements StrutturaTurnoMappingDAO {
 		
 		StrutturaDAO strutturaDAO = DB2FactoryDAO.getDAOFactory(DBInstance.DB2).getStrutturaDAO();
 		Struttura result = strutturaDAO.get(resS.getString("STRUTTURA"));
-		
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;

@@ -9,6 +9,7 @@ import java.sql.Statement;
 
 import it.ingsoft.model.struttura.Struttura;
 import it.ingsoft.model.struttura.StrutturaDAO;
+import it.ingsoft.persistence.db2.proxy.DB2StrutturaProxy;
 
 public class DB2StrutturaDAO implements StrutturaDAO {
 	
@@ -30,6 +31,7 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -41,6 +43,7 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -76,6 +79,8 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 		prepStatement.setString(10, cap);
 		
 		prepStatement.executeUpdate();
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -111,8 +116,9 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 		prepStatement.setString(10, struttura.getPartitaIva());
 		
 		prepStatement.executeUpdate();
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
-		
 	}
 
 	@Override
@@ -123,6 +129,8 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 		prepStatement.setString(1, struttura.getPartitaIva());
 		
 		prepStatement.executeUpdate();
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -136,11 +144,10 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 		ResultSet resS = prepStatement.executeQuery();
 		if(!resS.next()) throw new SQLException("No result");
 		
-		Struttura result = new Struttura();
+		Struttura result = new DB2StrutturaProxy(partitaIva);
 		
 		char[] cap = resS.getString("CAP").toCharArray();
 		
-		result.setPartitaIva(partitaIva);
 		result.setNomeStruttura(resS.getString("NOMESTRUTTURA"));
 		result.setFotoFatturaValida(new File(resS.getString("FOTOFATTURAVALIDA")));
 		result.setIban(resS.getString("IBAN"));
@@ -153,6 +160,7 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 		
 		if(resS.next()) throw new SQLException("Not unique identifier: multiple response");
 		
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;

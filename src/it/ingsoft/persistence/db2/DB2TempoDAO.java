@@ -8,6 +8,7 @@ import java.sql.Statement;
 
 import it.ingsoft.model.tempo.Tempo;
 import it.ingsoft.model.tempo.TempoDAO;
+import it.ingsoft.persistence.db2.proxy.DB2TempoProxy;
 
 public class DB2TempoDAO implements TempoDAO {
 
@@ -21,6 +22,8 @@ public class DB2TempoDAO implements TempoDAO {
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
+
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -32,6 +35,8 @@ public class DB2TempoDAO implements TempoDAO {
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
+		
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -46,6 +51,8 @@ public class DB2TempoDAO implements TempoDAO {
 		prepStatement.setLong(2, tempo.getValore());
 		
 		prepStatement.executeUpdate();
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -59,6 +66,8 @@ public class DB2TempoDAO implements TempoDAO {
 		prepStatement.setInt(2, tempo.getIdTempo());
 		
 		prepStatement.executeUpdate();
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 		
 	}
@@ -71,6 +80,8 @@ public class DB2TempoDAO implements TempoDAO {
 		prepStatement.setInt(1, tempo.getIdTempo());
 		
 		prepStatement.executeUpdate();
+
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 	}
 
@@ -84,13 +95,13 @@ public class DB2TempoDAO implements TempoDAO {
 		ResultSet resS = prepStatement.executeQuery();
 		if(!resS.next()) throw new SQLException("No result");
 		
-		Tempo result = new Tempo();
+		Tempo result = new DB2TempoProxy(idTempo);
 		
-		result.setIdTempo(idTempo);
 		result.setValore(resS.getLong("VALORE"));
 
 		if(resS.next()) throw new SQLException("Not unique identifier: multiple response");
 		
+		prepStatement.close();
 		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;
