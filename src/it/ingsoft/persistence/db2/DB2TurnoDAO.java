@@ -9,9 +9,6 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.time.LocalDateTime;
 
-import it.ingsoft.model.struttura.Struttura;
-import it.ingsoft.model.tempo.Tempo;
-import it.ingsoft.model.tempo.TempoDAO;
 import it.ingsoft.model.turno.Turno;
 import it.ingsoft.model.turno.TurnoDAO;
 
@@ -23,17 +20,16 @@ public class DB2TurnoDAO implements TurnoDAO {
 		
 		String query = "CREATE TABLE TURNI (" +
 					   "IDTURNO INT NOT NULL PRIMARY KEY," +
-					   "IDSTRUTTURA VARCHAR(20) NOT NULL REFERENCES STRUTTURA(PARTITAIVA)," +
-					   "DATAINIZIO DATE NOT NULL," +
-					   "ORAINIZIO TIME NOT NULL," +
-					   "DATAFINE DATE NOT NULL," +
-					   "ORAFINE TIME NOT NULL," +
-					   "POSTIDISPONIBILI INT NOT NULL," +
-					   "PREZZO FLOAT NOT NULL)";
+					   "DATAINIZIO DATE," +
+					   "ORAINIZIO TIME," +
+					   "DATAFINE DATE," +
+					   "ORAFINE TIME," +
+					   "POSTIDISPONIBILI INT," +
+					   "PREZZO FLOAT )";
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
-		DB2FactoryDAO.closeConnection();
+		DB2FactoryDAO.closeConnection(connection);
 	}
 
 	@Override
@@ -44,53 +40,48 @@ public class DB2TurnoDAO implements TurnoDAO {
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
-		DB2FactoryDAO.closeConnection();
+		DB2FactoryDAO.closeConnection(connection);
 	}
 
 	@Override
 	public void insert(Turno turno) throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
 		PreparedStatement prepStatement = connection.prepareStatement("INSERT INTO TURNI (IDTURNO, " +
-																						 "IDSTRUTTURA, " +
 																						 "DATAINIZIO, " +
 																						 "ORAINIZIO, " +
 																						 "DATAFINE, " +
 																						 "ORAFINE, " +
 																						 "POSTIDISPONIBILI," +
 																						 "PREZZO" +
-																						 ") VALUES (?,?,?,?,?,?,?,?)");
+																						 ") VALUES (?,?,?,?,?,?,?)");
 		
-		Date dataInizio = Date.valueOf(turno.getInizio().toLocalDate());
-		Time oraInizio = Time.valueOf(turno.getInizio().toLocalTime());
-		Date dataFine = Date.valueOf(turno.getFine().toLocalDate());
-		Time oraFine = Time.valueOf(turno.getFine().toLocalTime());
+		Date dataInizio = null;
+		Time oraInizio = null;
+		Date dataFine = null;
+		Time oraFine = null;		
+		
+		try { dataInizio = Date.valueOf(turno.getInizio().toLocalDate()); } catch(NullPointerException e) { dataInizio = null; }
+		try { oraInizio = Time.valueOf(turno.getInizio().toLocalTime()); } catch(NullPointerException e) { oraInizio = null; }
+		try { dataFine = Date.valueOf(turno.getFine().toLocalDate()); } catch(NullPointerException e) { dataFine = null; }
+		try { oraFine = Time.valueOf(turno.getFine().toLocalTime()); } catch(NullPointerException e) { oraFine = null; }
 		
 		
 		prepStatement.setInt(1, turno.getId());
-		prepStatement.setString(2, turno.getStruttura().getPartitaIva());
-		prepStatement.setDate(3, dataInizio);
-		prepStatement.setTime(4, oraInizio);
-		prepStatement.setDate(5, dataFine);
-		prepStatement.setTime(6, oraFine);
-		prepStatement.setInt(7, turno.getPostiDisponibili());
-		prepStatement.setFloat(8, turno.getPrezzo());
+		prepStatement.setDate(2, dataInizio);
+		prepStatement.setTime(3, oraInizio);
+		prepStatement.setDate(4, dataFine);
+		prepStatement.setTime(5, oraFine);
+		prepStatement.setInt(6, turno.getPostiDisponibili());
+		prepStatement.setFloat(7, turno.getPrezzo());
 		
 		prepStatement.executeUpdate();
-		DB2FactoryDAO.closeConnection();
-		
-		TempoDAO tempiDAO = new DB2FactoryDAO().getTempoDAO();
-		
-		for(Tempo t : turno.getTempi())
-		{
-			tempiDAO.insert(t,turno);
-		}
+		DB2FactoryDAO.closeConnection(connection);
 	}
 
 	@Override
 	public void update(Turno turno) throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
-		PreparedStatement prepStatement = connection.prepareStatement("UPDATE TEMPI SET " +
-																					   "IDSTRUTTURA = ?, " +
+		PreparedStatement prepStatement = connection.prepareStatement("UPDATE TURNI SET " +
 																					   "DATAINIZIO = ?, " +
 																					   "ORAINIZIO = ?, " +
 																					   "DATAFINE = ?, " +
@@ -99,30 +90,27 @@ public class DB2TurnoDAO implements TurnoDAO {
 																					   "PREZZO = ? " +
 																					   "WHERE IDTURNO = ?");
 		
-		Date dataInizio = Date.valueOf(turno.getInizio().toLocalDate());
-		Time oraInizio = Time.valueOf(turno.getInizio().toLocalTime());
-		Date dataFine = Date.valueOf(turno.getFine().toLocalDate());
-		Time oraFine = Time.valueOf(turno.getFine().toLocalTime());
+		Date dataInizio = null;
+		Time oraInizio = null;
+		Date dataFine = null;
+		Time oraFine = null;		
+		
+		try { dataInizio = Date.valueOf(turno.getInizio().toLocalDate()); } catch(NullPointerException e) { dataInizio = null; }
+		try { oraInizio = Time.valueOf(turno.getInizio().toLocalTime()); } catch(NullPointerException e) { oraInizio = null; }
+		try { dataFine = Date.valueOf(turno.getFine().toLocalDate()); } catch(NullPointerException e) { dataFine = null; }
+		try { oraFine = Time.valueOf(turno.getFine().toLocalTime()); } catch(NullPointerException e) { oraFine = null; }
 		
 		
-		prepStatement.setString(1, turno.getStruttura().getPartitaIva());
-		prepStatement.setDate(2, dataInizio);
-		prepStatement.setTime(3, oraInizio);
-		prepStatement.setDate(4, dataFine);
-		prepStatement.setTime(5, oraFine);
-		prepStatement.setInt(6, turno.getPostiDisponibili());
-		prepStatement.setInt(7, turno.getId());
-		prepStatement.setFloat(8, turno.getPrezzo());
+		prepStatement.setDate(1, dataInizio);
+		prepStatement.setTime(2, oraInizio);
+		prepStatement.setDate(3, dataFine);
+		prepStatement.setTime(4, oraFine);
+		prepStatement.setInt(5, turno.getPostiDisponibili());
+		prepStatement.setInt(6, turno.getId());
+		prepStatement.setFloat(7, turno.getPrezzo());
 		
 		prepStatement.executeUpdate();
-		DB2FactoryDAO.closeConnection();
-		
-		TempoDAO tempiDAO = new DB2FactoryDAO().getTempoDAO();
-		
-		for(Tempo t : turno.getTempi())
-		{
-			tempiDAO.update(t);
-		}
+		DB2FactoryDAO.closeConnection(connection);
 	}
 
 	@Override
@@ -133,7 +121,7 @@ public class DB2TurnoDAO implements TurnoDAO {
 		prepStatement.setInt(1, turno.getId());
 		
 		prepStatement.executeUpdate();
-		DB2FactoryDAO.closeConnection();
+		DB2FactoryDAO.closeConnection(connection);
 	}
 
 	@Override
@@ -148,24 +136,26 @@ public class DB2TurnoDAO implements TurnoDAO {
 		
 		Turno result = new Turno();
 		
-		DB2FactoryDAO factory = new DB2FactoryDAO();
-		Struttura struttura = factory.getStrutturaDAO().get(resS.getString("IDSTRUTTURA"));
 		Date datIn = resS.getDate("DATAINIZIO");
 		Time oraIn = resS.getTime("ORAINIZIO");
 		Date datFi = resS.getDate("DATAFINE");
 		Time oraFi = resS.getTime("ORAFINE");
 		
-		LocalDateTime inizio = LocalDateTime.of(datIn.toLocalDate(), oraIn.toLocalTime());
-		LocalDateTime fine = LocalDateTime.of(datFi.toLocalDate(), oraFi.toLocalTime());
+		LocalDateTime inizio = null;
+		LocalDateTime fine = null;LocalDateTime.of(datFi.toLocalDate(), oraFi.toLocalTime());
+		
+		try { inizio = LocalDateTime.of(datIn.toLocalDate(), oraIn.toLocalTime()); } catch(NullPointerException e) { inizio = null; }
+		try { fine = LocalDateTime.of(datFi.toLocalDate(), oraFi.toLocalTime()); } catch(NullPointerException e) { fine = null; }
 		
 		result.setId(idTurno);
-		result.setStruttura(struttura);
 		result.setInizio(inizio);
 		result.setFine(fine);
 		result.setPostiDisponibili(resS.getInt("POSTIDISPONIBILI"));
 		result.setPrezzo(resS.getFloat("PREZZO"));
 
 		if(resS.next()) throw new SQLException("Not unique identifier: multiple response");
+		
+		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;
 	}

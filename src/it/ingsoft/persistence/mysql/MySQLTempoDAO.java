@@ -11,7 +11,6 @@ import java.util.List;
 import it.ingsoft.model.tempo.Tempo;
 import it.ingsoft.model.tempo.TempoDAO;
 import it.ingsoft.model.turno.Turno;
-import it.ingsoft.model.utente.Utente;
 
 public class MySQLTempoDAO implements TempoDAO {
 
@@ -21,8 +20,6 @@ public class MySQLTempoDAO implements TempoDAO {
 		
 		String query = "CREATE TABLE TEMPI (" +
 					   "IDTEMPO INT NOT NULL PRIMARY KEY," +
-					   "IDUTENTE VARCHAR(20) NOT NULL REFERENCES UTENTE(CODICEFISCALE)," +
-					   "IDTURNO INT NOT NULL REFERENCES TURNI(IDTURNO), " +	//Aggiunto
 					   "VALORE BIGINT NOT NULL)";
 		
 		Statement statement = connection.createStatement();
@@ -45,15 +42,11 @@ public class MySQLTempoDAO implements TempoDAO {
 	public void insert(Tempo tempo, Turno turno) throws SQLException {
 		Connection connection = MySQLFactoryDAO.createConnection();
 		PreparedStatement prepStatement = connection.prepareStatement("INSERT INTO TEMPI (IDTEMPO, " +
-																						 "IDUTENTE, " +
-																						 "IDTURNO, " +	//Aggiunto
 																						 "VALORE" +
-																						 ") VALUES (?,?,?,?)");
+																						 ") VALUES (?,?)");
 		
 		prepStatement.setInt(1, tempo.getIdTempo());
 		prepStatement.setString(2, tempo.getUtente().getCodiceFiscale());
-		prepStatement.setInt(3, turno.getId());	//Aggiunto
-		prepStatement.setLong(4, tempo.getValore());
 		
 		prepStatement.executeUpdate();
 		MySQLFactoryDAO.closeConnection();
@@ -63,13 +56,10 @@ public class MySQLTempoDAO implements TempoDAO {
 	public void update(Tempo tempo) throws SQLException {
 		Connection connection = MySQLFactoryDAO.createConnection();
 		PreparedStatement prepStatement = connection.prepareStatement("UPDATE TEMPI SET " +
-																					   "IDUTENTE = ?, " +
 																					   "VALORE = ? " +
 																					   "WHERE IDTEMPO = ?");
-		
-		prepStatement.setString(1, tempo.getUtente().getCodiceFiscale());
-		prepStatement.setLong(2, tempo.getValore());
-		prepStatement.setInt(3, tempo.getIdTempo());
+		prepStatement.setLong(1, tempo.getValore());
+		prepStatement.setInt(2, tempo.getIdTempo());
 		
 		prepStatement.executeUpdate();
 		MySQLFactoryDAO.closeConnection();
@@ -99,10 +89,7 @@ public class MySQLTempoDAO implements TempoDAO {
 		
 		Tempo result = new Tempo();
 		
-		Utente utente = new MySQLFactoryDAO().getUtenteDAO().get(resS.getString("IDUTENTE"));
-		
 		result.setIdTempo(idTempo);
-		result.setUtente(utente);
 		result.setValore(resS.getLong("VALORE"));
 
 		if(resS.next()) throw new SQLException("Not unique identifier: multiple response");

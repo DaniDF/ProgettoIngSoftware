@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT db (db-instance+)>
+<!ELEMENT db-instance (db-url,db-username,db-password)>
+<!ELEMENT db-url (#PCDATA)>
+<!ELEMENT db-username (#PCDATA)>
+<!ELEMENT db-password (#PCDATA)>
+<!ATTLIST db-instance type (MYSQL|DB2) #REQUIRED>

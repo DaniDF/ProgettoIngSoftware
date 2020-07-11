@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.ingsoft.model.metodoPagamento.MetodoPagamento;
-import it.ingsoft.model.struttura.Struttura;
 import it.ingsoft.model.turno.Turno;
 import it.ingsoft.model.utente.Utente;
 
@@ -13,7 +12,6 @@ public class Fattura {
 	private int idFattura;
 	private MetodoPagamento metodoPagamento;
 	private Utente utente;
-	private Struttura struttura;
 	private List<Turno> acquisti;
 	
 	public Fattura()
@@ -38,12 +36,6 @@ public class Fattura {
 	}
 	public void setUtente(Utente utente) {
 		this.utente = utente;
-	}
-	public Struttura getStruttura() {
-		return struttura;
-	}
-	public void setStruttura(Struttura struttura) {
-		this.struttura = struttura;
 	}
 	public List<Turno> getAcquisti() {
 		return acquisti;
@@ -85,7 +77,6 @@ public class Fattura {
 		isEq =  isEq && this.idFattura == objF.idFattura &&
 					    //this.metodoPagamento.equals(objF.metodoPagamento) && //TODO Cha facciamo qua'?
 					    this.utente.equals(objF.utente) &&
-					    this.struttura.equals(objF.struttura) &&
 					    this.acquisti.size() == objF.acquisti.size();
 		
 		for(int cont = 0; isEq && cont < this.acquisti.size(); cont++)

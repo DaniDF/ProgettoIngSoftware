@@ -9,9 +9,6 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.time.LocalDateTime;
 
-import it.ingsoft.model.struttura.Struttura;
-import it.ingsoft.model.tempo.Tempo;
-import it.ingsoft.model.tempo.TempoDAO;
 import it.ingsoft.model.turno.Turno;
 import it.ingsoft.model.turno.TurnoDAO;
 
@@ -23,7 +20,6 @@ public class MySQLTurnoDAO implements TurnoDAO {
 		
 		String query = "CREATE TABLE TURNI (" +
 					   "IDTURNO INT NOT NULL PRIMARY KEY," +
-					   "IDSTRUTTURA VARCHAR(20) NOT NULL REFERENCES STRUTTURA(PARTITAIVA)," +
 					   "DATAINIZIO DATE NOT NULL," +
 					   "ORAINIZIO TIME NOT NULL," +
 					   "DATAFINE DATE NOT NULL," +
@@ -51,14 +47,13 @@ public class MySQLTurnoDAO implements TurnoDAO {
 	public void insert(Turno turno) throws SQLException {
 		Connection connection = MySQLFactoryDAO.createConnection();
 		PreparedStatement prepStatement = connection.prepareStatement("INSERT INTO TURNI (IDTURNO, " +
-																						 "IDSTRUTTURA, " +
 																						 "DATAINIZIO, " +
 																						 "ORAINIZIO, " +
 																						 "DATAFINE, " +
 																						 "ORAFINE, " +
 																						 "POSTIDISPONIBILI," +
 																						 "PREZZO" +
-																						 ") VALUES (?,?,?,?,?,?,?,?)");
+																						 ") VALUES (?,?,?,?,?,?,?)");
 		
 		Date dataInizio = Date.valueOf(turno.getInizio().toLocalDate());
 		Time oraInizio = Time.valueOf(turno.getInizio().toLocalTime());
@@ -67,30 +62,21 @@ public class MySQLTurnoDAO implements TurnoDAO {
 		
 		
 		prepStatement.setInt(1, turno.getId());
-		prepStatement.setString(2, turno.getStruttura().getPartitaIva());
-		prepStatement.setDate(3, dataInizio);
-		prepStatement.setTime(4, oraInizio);
-		prepStatement.setDate(5, dataFine);
-		prepStatement.setTime(6, oraFine);
-		prepStatement.setInt(7, turno.getPostiDisponibili());
-		prepStatement.setFloat(8, turno.getPrezzo());
+		prepStatement.setDate(2, dataInizio);
+		prepStatement.setTime(3, oraInizio);
+		prepStatement.setDate(4, dataFine);
+		prepStatement.setTime(5, oraFine);
+		prepStatement.setInt(6, turno.getPostiDisponibili());
+		prepStatement.setFloat(7, turno.getPrezzo());
 		
 		prepStatement.executeUpdate();
 		MySQLFactoryDAO.closeConnection();
-		
-		TempoDAO tempiDAO = new MySQLFactoryDAO().getTempoDAO();
-		
-		for(Tempo t : turno.getTempi())
-		{
-			tempiDAO.insert(t,turno);
-		}
 	}
 
 	@Override
 	public void update(Turno turno) throws SQLException {
 		Connection connection = MySQLFactoryDAO.createConnection();
 		PreparedStatement prepStatement = connection.prepareStatement("UPDATE TEMPI SET " +
-																					   "IDSTRUTTURA = ?, " +
 																					   "DATAINIZIO = ?, " +
 																					   "ORAINIZIO = ?, " +
 																					   "DATAFINE = ?, " +
@@ -105,24 +91,16 @@ public class MySQLTurnoDAO implements TurnoDAO {
 		Time oraFine = Time.valueOf(turno.getFine().toLocalTime());
 		
 		
-		prepStatement.setString(1, turno.getStruttura().getPartitaIva());
-		prepStatement.setDate(2, dataInizio);
-		prepStatement.setTime(3, oraInizio);
-		prepStatement.setDate(4, dataFine);
-		prepStatement.setTime(5, oraFine);
-		prepStatement.setInt(6, turno.getPostiDisponibili());
-		prepStatement.setInt(7, turno.getId());
-		prepStatement.setFloat(8, turno.getPrezzo());
+		prepStatement.setDate(1, dataInizio);
+		prepStatement.setTime(2, oraInizio);
+		prepStatement.setDate(3, dataFine);
+		prepStatement.setTime(4, oraFine);
+		prepStatement.setInt(5, turno.getPostiDisponibili());
+		prepStatement.setInt(6, turno.getId());
+		prepStatement.setFloat(7, turno.getPrezzo());
 		
 		prepStatement.executeUpdate();
 		MySQLFactoryDAO.closeConnection();
-		
-		TempoDAO tempiDAO = new MySQLFactoryDAO().getTempoDAO();
-		
-		for(Tempo t : turno.getTempi())
-		{
-			tempiDAO.update(t);
-		}
 	}
 
 	@Override
@@ -148,8 +126,6 @@ public class MySQLTurnoDAO implements TurnoDAO {
 		
 		Turno result = new Turno();
 		
-		MySQLFactoryDAO factory = new MySQLFactoryDAO();
-		Struttura struttura = factory.getStrutturaDAO().get(resS.getString("IDSTRUTTURA"));
 		Date datIn = resS.getDate("DATAINIZIO");
 		Time oraIn = resS.getTime("ORAINIZIO");
 		Date datFi = resS.getDate("DATAFINE");
@@ -159,7 +135,6 @@ public class MySQLTurnoDAO implements TurnoDAO {
 		LocalDateTime fine = LocalDateTime.of(datFi.toLocalDate(), oraFi.toLocalTime());
 		
 		result.setId(idTurno);
-		result.setStruttura(struttura);
 		result.setInizio(inizio);
 		result.setFine(fine);
 		result.setPostiDisponibili(resS.getInt("POSTIDISPONIBILI"));

@@ -3,6 +3,12 @@ package it.ingsoft.persistence;
 import java.sql.SQLException;
 
 import it.ingsoft.model.fattura.FatturaDAO;
+import it.ingsoft.model.relations.FatturaTurnoMappingDAO;
+import it.ingsoft.model.relations.StrutturaTurnoMappingDAO;
+import it.ingsoft.model.relations.TurnoTempoMappingDAO;
+import it.ingsoft.model.relations.UtenteFatturaMappingDAO;
+import it.ingsoft.model.relations.UtenteTempoMappingDAO;
+import it.ingsoft.model.security.CredentialsDAO;
 import it.ingsoft.model.struttura.StrutturaDAO;
 import it.ingsoft.model.tempo.TempoDAO;
 import it.ingsoft.model.turno.TurnoDAO;
@@ -27,4 +33,10 @@ public abstract class FactoryDAO {
 	public abstract TempoDAO getTempoDAO() throws SQLException;
 	public abstract TurnoDAO getTurnoDAO() throws SQLException;
 	public abstract UtenteDAO getUtenteDAO() throws SQLException;
+	public abstract CredentialsDAO getCredentialsDAO() throws SQLException;
+	public abstract StrutturaTurnoMappingDAO getStrutturaTurnoMappingDAO() throws SQLException;
+	public abstract TurnoTempoMappingDAO getTurnoTempoMappingDAO() throws SQLException;
+	public abstract UtenteTempoMappingDAO getUtenteTempoMappingDAO() throws SQLException;
+	public abstract FatturaTurnoMappingDAO getFatturaTurnoMappingDAO() throws SQLException;
+	public abstract UtenteFatturaMappingDAO getUtenteFatturaMappingDAO() throws SQLException;
 }

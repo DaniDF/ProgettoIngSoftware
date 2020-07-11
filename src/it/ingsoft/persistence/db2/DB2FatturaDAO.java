@@ -9,9 +9,7 @@ import java.util.ArrayList;
 
 import it.ingsoft.model.fattura.Fattura;
 import it.ingsoft.model.fattura.FatturaDAO;
-import it.ingsoft.model.struttura.Struttura;
 import it.ingsoft.model.turno.Turno;
-import it.ingsoft.model.utente.Utente;
 
 public class DB2FatturaDAO implements FatturaDAO {
 
@@ -20,14 +18,11 @@ public class DB2FatturaDAO implements FatturaDAO {
 		Connection connection = DB2FactoryDAO.createConnection();
 		
 		String query = "CREATE TABLE FATTURA (" +
-					   "IDFATTURA INT NOT NULL," +
-					   "IDTURNO INT NOT NULL REFERENCES TURNI(IDTURNO)," +
-					   "IDUTENTE VARCHAR(20) NOT NULL REFERENCES UTENTE(CODICEFISCALE)," +
-					   "CONSTRAINT PK PRIMARY KEY(IDFATTURA,IDTURNO) )";
+					   "IDFATTURA INT NOT NULL PRIMARY KEY )";
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
-		DB2FactoryDAO.closeConnection();
+		DB2FactoryDAO.closeConnection(connection);
 	}
 
 	@Override
@@ -38,47 +33,34 @@ public class DB2FatturaDAO implements FatturaDAO {
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
-		DB2FactoryDAO.closeConnection();
+		DB2FactoryDAO.closeConnection(connection);
 	}
 
 	@Override
 	public void insert(Fattura fattura) throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
-		PreparedStatement prepStatement = connection.prepareStatement("INSERT INTO FATTURA (IDFATTURA, " +
-																						   "IDTURNO, " +
-																						   "IDUTENTE" +
-																						   ") VALUES (?,?,?)");
+		PreparedStatement prepStatement = connection.prepareStatement("INSERT INTO FATTURA (IDFATTURA " +
+																						   ") VALUES (?)");
 		
-		for(Turno t : fattura.getAcquisti())
-		{			
-			prepStatement.setInt(1, fattura.getIdFattura());
-			prepStatement.setInt(2, t.getId());
-			prepStatement.setString(3, fattura.getUtente().getCodiceFiscale());
-			
-			prepStatement.executeUpdate();
-		}
+		prepStatement.setInt(1, fattura.getIdFattura());
 		
-		DB2FactoryDAO.closeConnection();
+		prepStatement.executeUpdate();
+		
+		DB2FactoryDAO.closeConnection(connection);
 	}
 
 	@Override @Deprecated
 	public void update(Fattura fattura) throws SQLException {
 		Connection connection = DB2FactoryDAO.createConnection();
 		PreparedStatement prepStatement = connection.prepareStatement("UPDATE FATTURA SET " +
-																					   "IDUTENTE = ? " +
-																					   "WHERE IDFATTURA = ? AND IDTURNO = ?");
+																					   "IDFATTURA = ? " +
+																					   "WHERE IDFATTURA = ?");
 		
-		for(Turno t : fattura.getAcquisti())
-		{
-			prepStatement.setString(1, fattura.getUtente().getCodiceFiscale());
-			prepStatement.setInt(2, fattura.getIdFattura());
-			prepStatement.setInt(3, t.getId());
-			
-			prepStatement.executeUpdate();
-		}
+		prepStatement.setInt(1, fattura.getIdFattura());
 		
-		DB2FactoryDAO.closeConnection();
+		prepStatement.executeUpdate();
 		
+		DB2FactoryDAO.closeConnection(connection);
 	}
 
 	@Override
@@ -89,7 +71,7 @@ public class DB2FatturaDAO implements FatturaDAO {
 		prepStatement.setInt(1, fattura.getIdFattura());
 		
 		prepStatement.executeUpdate();
-		DB2FactoryDAO.closeConnection();
+		DB2FactoryDAO.closeConnection(connection);
 	}
 
 	@Override
@@ -100,22 +82,16 @@ public class DB2FatturaDAO implements FatturaDAO {
 		prepStatement.setInt(1, idFattura);
 		
 		ResultSet resS = prepStatement.executeQuery();
+		if(!resS.next()) throw new SQLException("No result");
 		
 		Fattura result = new Fattura();
 		result.setAcquisti(new ArrayList<Turno>());
 		
-		while(resS.next())
-		{
-			DB2FactoryDAO factory = new DB2FactoryDAO();
-			Turno turno = factory.getTurnoDAO().get(resS.getInt("IDTURNO"));
-			Struttura struttura = turno.getStruttura();
-			Utente utente = factory.getUtenteDAO().get(resS.getString("IDUTENTE"));
-			
-			result.setIdFattura(idFattura);
-			result.setStruttura(struttura);
-			result.setUtente(utente);
-			result.getAcquisti().add(turno);
-		}
+		result.setIdFattura(resS.getInt("IDFATTURA"));
+		
+		if(resS.next()) throw new SQLException("Not unique identifier: multiple response");
+		
+		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;
 	}

@@ -20,10 +20,7 @@ public class MySQLFatturaDAO implements FatturaDAO {
 		Connection connection = MySQLFactoryDAO.createConnection();
 		
 		String query = "CREATE TABLE FATTURA (" +
-					   "IDFATTURA INT NOT NULL," +
-					   "IDTURNO INT NOT NULL REFERENCES TURNI(IDTURNO)," +
-					   "IDUTENTE VARCHAR(20) NOT NULL REFERENCES UTENTE(CODICEFISCALE)," +
-					   "CONSTRAINT PK PRIMARY KEY(IDFATTURA,IDTURNO) )";
+					   "IDFATTURA INT NOT NULL PRIMARY KEY )";
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
@@ -45,15 +42,11 @@ public class MySQLFatturaDAO implements FatturaDAO {
 	public void insert(Fattura fattura) throws SQLException {
 		Connection connection = MySQLFactoryDAO.createConnection();
 		PreparedStatement prepStatement = connection.prepareStatement("INSERT INTO FATTURA (IDFATTURA, " +
-																						   "IDTURNO, " +
-																						   "IDUTENTE" +
-																						   ") VALUES (?,?,?)");
+																						   ") VALUES (?)");
 		
 		for(Turno t : fattura.getAcquisti())
 		{			
 			prepStatement.setInt(1, fattura.getIdFattura());
-			prepStatement.setInt(2, t.getId());
-			prepStatement.setString(3, fattura.getUtente().getCodiceFiscale());
 			
 			prepStatement.executeUpdate();
 		}
@@ -65,14 +58,13 @@ public class MySQLFatturaDAO implements FatturaDAO {
 	public void update(Fattura fattura) throws SQLException {
 		Connection connection = MySQLFactoryDAO.createConnection();
 		PreparedStatement prepStatement = connection.prepareStatement("UPDATE FATTURA SET " +
-																					   "IDUTENTE = ? " +
-																					   "WHERE IDFATTURA = ? AND IDTURNO = ?");
+																					   "IDTURNO = ? " +
+																					   "WHERE IDTURNO = ?");
 		
 		for(Turno t : fattura.getAcquisti())
 		{
 			prepStatement.setString(1, fattura.getUtente().getCodiceFiscale());
-			prepStatement.setInt(2, fattura.getIdFattura());
-			prepStatement.setInt(3, t.getId());
+			prepStatement.setString(2, fattura.getUtente().getCodiceFiscale());
 			
 			prepStatement.executeUpdate();
 		}

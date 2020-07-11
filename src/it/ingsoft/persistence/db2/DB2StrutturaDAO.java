@@ -18,19 +18,19 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 		
 		String query = "CREATE TABLE STRUTTURA (" +
 					   "PARTITAIVA VARCHAR(30) NOT NULL PRIMARY KEY," +
-					   "NOMESTRUTTURA VARCHAR(20) NOT NULL," +
-					   "FOTOFATTURAVALIDA VARCHAR(500) NOT NULL," +
-					   "IBAN VARCHAR(30) NOT NULL," +
-					   "NAZIONE VARCHAR(20) NOT NULL," +
-					   "PROVINCIA VARCHAR(20) NOT NULL," +
-					   "CITTA VARCHAR(20) NOT NULL," +
-					   "VIA VARCHAR(50) NOT NULL," +
-					   "NUMEROCIVICO VARCHAR(5) NOT NULL," +
-					   "CAP VARCHAR(5) NOT NULL)";
+					   "NOMESTRUTTURA VARCHAR(20)," +
+					   "FOTOFATTURAVALIDA VARCHAR(500)," +
+					   "IBAN VARCHAR(30)," +
+					   "NAZIONE VARCHAR(20)," +
+					   "PROVINCIA VARCHAR(20)," +
+					   "CITTA VARCHAR(20)," +
+					   "VIA VARCHAR(50)," +
+					   "NUMEROCIVICO VARCHAR(5)," +
+					   "CAP VARCHAR(5) )";
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
-		DB2FactoryDAO.closeConnection();
+		DB2FactoryDAO.closeConnection(connection);
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
-		DB2FactoryDAO.closeConnection();
+		DB2FactoryDAO.closeConnection(connection);
 	}
 
 	@Override
@@ -59,11 +59,14 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 																							 "CAP" +
 																							 ") VALUES (?,?,?,?,?,?,?,?,?,?)");
 		
-		String cap = String.copyValueOf(struttura.getCap());
+		String cap = null;
+		String pathFoto = null;
+		try { cap = String.copyValueOf(struttura.getCap()); } catch(NullPointerException e) { cap = null; }
+		try { struttura.getFotoFatturaValida().getAbsolutePath(); } catch (NullPointerException e) { pathFoto = null; }
 		
 		prepStatement.setString(1, struttura.getPartitaIva());
 		prepStatement.setString(2, struttura.getNomeStruttura());
-		prepStatement.setString(3, struttura.getFotoFatturaValida().getAbsolutePath());
+		prepStatement.setString(3, pathFoto);
 		prepStatement.setString(4, struttura.getIban());
 		prepStatement.setString(5, struttura.getNazione());
 		prepStatement.setString(6, struttura.getProvincia());
@@ -73,7 +76,7 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 		prepStatement.setString(10, cap);
 		
 		prepStatement.executeUpdate();
-		DB2FactoryDAO.closeConnection();
+		DB2FactoryDAO.closeConnection(connection);
 	}
 
 	@Override
@@ -91,10 +94,13 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 																						"CAP = ?" +
 																						"WHERE PARTITAIVA = ?");
 		
-		String cap = String.copyValueOf(struttura.getCap());
+		String cap = null;
+		String pathFoto = null;
+		try { cap = String.copyValueOf(struttura.getCap()); } catch(NullPointerException e) { cap = null; }
+		try { struttura.getFotoFatturaValida().getAbsolutePath(); } catch (NullPointerException e) { pathFoto = null; }
 		
 		prepStatement.setString(1, struttura.getNomeStruttura());
-		prepStatement.setString(2, struttura.getFotoFatturaValida().getAbsolutePath());
+		prepStatement.setString(2, pathFoto);
 		prepStatement.setString(3, struttura.getIban());
 		prepStatement.setString(4, struttura.getNazione());
 		prepStatement.setString(5, struttura.getProvincia());
@@ -105,7 +111,7 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 		prepStatement.setString(10, struttura.getPartitaIva());
 		
 		prepStatement.executeUpdate();
-		DB2FactoryDAO.closeConnection();
+		DB2FactoryDAO.closeConnection(connection);
 		
 	}
 
@@ -117,7 +123,7 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 		prepStatement.setString(1, struttura.getPartitaIva());
 		
 		prepStatement.executeUpdate();
-		DB2FactoryDAO.closeConnection();
+		DB2FactoryDAO.closeConnection(connection);
 	}
 
 	@Override
@@ -146,6 +152,8 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 		result.setCap(cap);
 		
 		if(resS.next()) throw new SQLException("Not unique identifier: multiple response");
+		
+		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;
 	}

@@ -19,21 +19,21 @@ public class DB2UtenteDAO implements UtenteDAO {
 		
 		String query = "CREATE TABLE UTENTE (" +
 					   "CODICEFISCALE VARCHAR(20) NOT NULL PRIMARY KEY," +
-					   "NOME VARCHAR(20) NOT NULL," +
-					   "COGNOME VARCHAR(20) NOT NULL," +
-					   "DATADINASCITA DATE NOT NULL," +
-					   "LUOGODINASCITA VARCHAR(20) NOT NULL," +
-					   "NUMERODITELEFONO VARCHAR(20) NOT NULL," +
-					   "NAZIONE VARCHAR(20) NOT NULL," +
-					   "PROVINCIA VARCHAR(20) NOT NULL," +
-					   "CITTA VARCHAR(20) NOT NULL," +
-					   "VIA VARCHAR(50) NOT NULL," +
-					   "NUMEROCIVICO VARCHAR(5) NOT NULL," +
-					   "CAP VARCHAR(5) NOT NULL)";
+					   "NOME VARCHAR(20)," +
+					   "COGNOME VARCHAR(20)," +
+					   "DATADINASCITA DATE," +
+					   "LUOGODINASCITA VARCHAR(20)," +
+					   "NUMERODITELEFONO VARCHAR(20)," +
+					   "NAZIONE VARCHAR(20)," +
+					   "PROVINCIA VARCHAR(20)," +
+					   "CITTA VARCHAR(20)," +
+					   "VIA VARCHAR(50)," +
+					   "NUMEROCIVICO VARCHAR(5)," +
+					   "CAP VARCHAR(5) )";
 		
 		Statement statement = connection.createStatement();
 		statement.execute(query);
-		DB2FactoryDAO.closeConnection();
+		DB2FactoryDAO.closeConnection(connection);
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class DB2UtenteDAO implements UtenteDAO {
 		
 		Statement statement = connection.createStatement();
 		statement.executeUpdate(query);
-		DB2FactoryDAO.closeConnection();
+		DB2FactoryDAO.closeConnection(connection);
 	}
 
 	@Override
@@ -64,8 +64,10 @@ public class DB2UtenteDAO implements UtenteDAO {
 																						  "CAP" +
 																						  ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
 		
-		Date dataDiNascita = Date.valueOf(utente.getDataDiNascita());
-		String cap = String.copyValueOf(utente.getCap());
+		Date dataDiNascita = null;
+		String cap = null;
+		try { dataDiNascita = Date.valueOf(utente.getDataDiNascita()); } catch(NullPointerException e) { dataDiNascita = null; }
+		try { cap = String.copyValueOf(utente.getCap()); } catch(NullPointerException e) { cap = null; }
 		
 		prepStatement.setString(1, utente.getCodiceFiscale());
 		prepStatement.setString(2, utente.getNome());
@@ -81,7 +83,7 @@ public class DB2UtenteDAO implements UtenteDAO {
 		prepStatement.setString(12, cap);
 		
 		prepStatement.executeUpdate();
-		DB2FactoryDAO.closeConnection();
+		DB2FactoryDAO.closeConnection(connection);
 	}
 
 	@Override
@@ -101,8 +103,10 @@ public class DB2UtenteDAO implements UtenteDAO {
 																						"CAP = ?" +
 																						"WHERE CODICEFISCALE = ?");
 		
-		Date dataDiNascita = Date.valueOf(utente.getDataDiNascita());
-		String cap = String.copyValueOf(utente.getCap());
+		Date dataDiNascita = null;
+		String cap = null;
+		try { dataDiNascita = Date.valueOf(utente.getDataDiNascita()); } catch(NullPointerException e) { dataDiNascita = null; }
+		try { cap = String.copyValueOf(utente.getCap()); } catch(NullPointerException e) { cap = null; }
 		
 		
 		prepStatement.setString(1, utente.getNome());
@@ -119,7 +123,7 @@ public class DB2UtenteDAO implements UtenteDAO {
 		prepStatement.setString(12, utente.getCodiceFiscale());
 		
 		prepStatement.executeUpdate();
-		DB2FactoryDAO.closeConnection();
+		DB2FactoryDAO.closeConnection(connection);
 		
 	}
 
@@ -131,7 +135,7 @@ public class DB2UtenteDAO implements UtenteDAO {
 		prepStatement.setString(1, utente.getCodiceFiscale());
 		
 		prepStatement.executeUpdate();
-		DB2FactoryDAO.closeConnection();
+		DB2FactoryDAO.closeConnection(connection);
 	}
 
 	@Override
@@ -163,6 +167,8 @@ public class DB2UtenteDAO implements UtenteDAO {
 		result.setCap(cap);
 		
 		if(resS.next()) throw new SQLException("Not unique identifier: multiple response");
+		
+		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;
 	}

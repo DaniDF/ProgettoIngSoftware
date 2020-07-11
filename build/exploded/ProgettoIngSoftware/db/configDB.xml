@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE db SYSTEM "configDB.dtd">
+
+<db>
+	<db-instance type="MYSQL">
+		<db-url>mysql://192.168.85.10:3306?serverTimezone=UTC</db-url>
+		<db-username>ProgettoIngSoftware</db-username>
+		<db-password>pis</db-password>
+	</db-instance>
+</db>
