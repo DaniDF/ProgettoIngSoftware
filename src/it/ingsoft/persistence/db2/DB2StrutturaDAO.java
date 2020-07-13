@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import it.ingsoft.model.struttura.Struttura;
 import it.ingsoft.model.struttura.StrutturaDAO;
@@ -163,6 +165,41 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 		if(resS.next()) throw new SQLException("Not unique identifier: multiple response");
 		
 		prepStatement.close();
+		DB2FactoryDAO.closeConnection(connection);
+		
+		return result;
+	}
+
+	@Override
+	public List<Struttura> getAll() throws SQLException {
+		Connection connection = DB2FactoryDAO.createConnection();
+		Statement statement = connection.createStatement();
+		
+		ResultSet resS = statement.executeQuery("SELECT * FROM STRUTTURA");
+		List<Struttura> result = new ArrayList<>();
+		
+		while(resS.next())
+		{
+			Struttura struttura = new Struttura();
+			char[] cap = resS.getString("CAP").toCharArray();
+			File file = null;
+			if(resS.getString("FOTOFATTURAVALIDA") != null) file = new File(resS.getString("FOTOFATTURAVALIDA"));
+			
+			struttura.setPartitaIva(resS.getString("PARTITAIVA"));
+			struttura.setNomeStruttura(resS.getString("NOMESTRUTTURA"));
+			struttura.setFotoFatturaValida(file);
+			struttura.setIban(resS.getString("IBAN"));
+			struttura.setNazione(resS.getString("NAZIONE"));
+			struttura.setProvincia(resS.getString("PROVINCIA"));
+			struttura.setCitta(resS.getString("CITTA"));
+			struttura.setVia(resS.getString("VIA"));
+			struttura.setNumeroCivico(resS.getString("NUMEROCIVICO"));
+			struttura.setCap(cap);
+			
+			result.add(struttura);
+		}
+		
+		statement.close();
 		DB2FactoryDAO.closeConnection(connection);
 		
 		return result;

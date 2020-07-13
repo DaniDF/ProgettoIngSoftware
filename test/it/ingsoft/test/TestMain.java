@@ -113,5 +113,20 @@ public class TestMain {
 		credentials = new DB2CredentialsProxyDAO("Dani");
 		if(!credentials.checkCredentials("dani")) throw new IllegalArgumentException("Errore check password struttura corretto");
 		if(credentials.checkCredentials("adcv")) throw new IllegalArgumentException("Errore check password struttura errato");
+	
+		
+		try
+		{
+			FactoryDAO factoryDAO = FactoryDAO.getDAOFactory(DBInstance.DB2);
+			StrutturaDAO strutturaDAO = factoryDAO.getStrutturaDAO();
+			
+			for(Struttura s : strutturaDAO.getAll())
+			{
+				System.out.println(s.getPartitaIva());
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
