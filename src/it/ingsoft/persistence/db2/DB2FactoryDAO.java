@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 
 import it.ingsoft.model.fattura.FatturaDAO;
 import it.ingsoft.model.relations.FatturaTurnoMappingDAO;
+import it.ingsoft.model.relations.StrutturaCredentialsMappingDAO;
 import it.ingsoft.model.relations.StrutturaTurnoMappingDAO;
 import it.ingsoft.model.relations.TurnoTempoMappingDAO;
 import it.ingsoft.model.relations.UtenteCredentialsMappingDAO;
@@ -126,5 +127,10 @@ public class DB2FactoryDAO extends FactoryDAO {
 	@Override
 	public UtenteCredentialsMappingDAO getUtenteCredentialsMappingDAO() throws SQLException {
 		return new DB2UtenteCredentialsMappingDAO();
+	}
+
+	@Override
+	public StrutturaCredentialsMappingDAO getStrutturaCredentialsMappingDAO() throws SQLException {
+		return new DB2StrutturaCredentialsDAO();
 	}
 }

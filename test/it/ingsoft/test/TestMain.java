@@ -105,7 +105,13 @@ public class TestMain {
 		DB2CredentialsProxyDAO credentials = new DB2CredentialsProxyDAO(utente1, "dani", "dani");
 		
 		credentials = new DB2CredentialsProxyDAO("dani");
-		if(!credentials.checkCredentials("dani")) throw new IllegalArgumentException("Errore chek password corretto");
-		if(credentials.checkCredentials("adcv")) throw new IllegalArgumentException("Errore chek password errato");
+		if(!credentials.checkCredentials("dani")) throw new IllegalArgumentException("Errore check password utente corretto");
+		if(credentials.checkCredentials("adcv")) throw new IllegalArgumentException("Errore check password utente errato");
+		
+		credentials = new DB2CredentialsProxyDAO(struttura1, "Dani", "dani");
+		
+		credentials = new DB2CredentialsProxyDAO("Dani");
+		if(!credentials.checkCredentials("dani")) throw new IllegalArgumentException("Errore check password struttura corretto");
+		if(credentials.checkCredentials("adcv")) throw new IllegalArgumentException("Errore check password struttura errato");
 	}
 }

@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import it.ingsoft.model.fattura.FatturaDAO;
 import it.ingsoft.model.relations.FatturaTurnoMappingDAO;
+import it.ingsoft.model.relations.StrutturaCredentialsMappingDAO;
 import it.ingsoft.model.relations.StrutturaTurnoMappingDAO;
 import it.ingsoft.model.relations.TurnoTempoMappingDAO;
 import it.ingsoft.model.relations.UtenteCredentialsMappingDAO;
@@ -40,4 +41,5 @@ public abstract class FactoryDAO {
 	public abstract FatturaTurnoMappingDAO getFatturaTurnoMappingDAO() throws SQLException;
 	public abstract UtenteFatturaMappingDAO getUtenteFatturaMappingDAO() throws SQLException;
 	public abstract UtenteCredentialsMappingDAO getUtenteCredentialsMappingDAO() throws SQLException;
+	public abstract StrutturaCredentialsMappingDAO getStrutturaCredentialsMappingDAO() throws SQLException;
 }

@@ -2,9 +2,11 @@ package it.ingsoft.persistence.db2.proxy;
 
 import java.sql.SQLException;
 
+import it.ingsoft.model.relations.StrutturaCredentialsMappingDAO;
 import it.ingsoft.model.relations.UtenteCredentialsMappingDAO;
 import it.ingsoft.model.security.Credentials;
 import it.ingsoft.model.security.CredentialsDAO;
+import it.ingsoft.model.struttura.Struttura;
 import it.ingsoft.model.utente.Utente;
 import it.ingsoft.persistence.DBInstance;
 import it.ingsoft.persistence.FactoryDAO;
@@ -32,6 +34,15 @@ public class DB2CredentialsProxyDAO extends Credentials {
 		} catch (SQLException e) {
 			System.out.println("Trovata tabella relazione utenti e credenziali");
 		}
+		
+		try
+		{
+			StrutturaCredentialsMappingDAO strCreDAO = factory.getStrutturaCredentialsMappingDAO();
+			strCreDAO.createTable();
+			
+		} catch (SQLException e) {
+			System.out.println("Trovata tabella relazione strutture e credenziali");
+		}
 	}
 	
 	public DB2CredentialsProxyDAO(String username)
@@ -56,7 +67,25 @@ public class DB2CredentialsProxyDAO extends Credentials {
 			
 		} catch (SQLException e) {
 			System.err.println("Impossibile salvare le credenziali: " + e.getMessage());
-			e.printStackTrace();
+		}
+	}
+	
+	public DB2CredentialsProxyDAO(Struttura struttura, String username, String password)
+	{
+		this(username);
+		
+		try
+		{
+			FactoryDAO factory = FactoryDAO.getDAOFactory(DBInstance.DB2);
+			
+			CredentialsDAO credentias = factory.getCredentialsDAO();
+			credentias.addCredentials(username, password);
+			
+			StrutturaCredentialsMappingDAO strCreDAO = factory.getStrutturaCredentialsMappingDAO();
+			strCreDAO.insert(struttura, username);
+			
+		} catch (SQLException e) {
+			System.err.println("Impossibile salvare le credenziali: " + e.getMessage());
 		}
 	}
 	
