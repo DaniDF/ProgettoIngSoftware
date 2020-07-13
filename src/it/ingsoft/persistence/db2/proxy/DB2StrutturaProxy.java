@@ -10,9 +10,24 @@ import it.ingsoft.model.struttura.Struttura;
 import it.ingsoft.model.struttura.StrutturaDAO;
 import it.ingsoft.model.turno.Turno;
 import it.ingsoft.persistence.DBInstance;
+import it.ingsoft.persistence.FactoryDAO;
 import it.ingsoft.persistence.db2.DB2FactoryDAO;
 
 public class DB2StrutturaProxy extends Struttura {
+	
+	static
+	{
+		FactoryDAO factory = FactoryDAO.getDAOFactory(DBInstance.DB2);
+		
+		try
+		{
+			StrutturaDAO strutturaDAO = factory.getStrutturaDAO();
+			strutturaDAO.createTable();
+			
+		} catch (SQLException e) {
+			System.out.println("Trovata tabella struttura");
+		}
+	}
 	
 	public DB2StrutturaProxy(String partitaIva) {
 		super();

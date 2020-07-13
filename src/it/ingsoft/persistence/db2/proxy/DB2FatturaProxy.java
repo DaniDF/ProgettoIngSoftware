@@ -8,12 +8,46 @@ import it.ingsoft.model.fattura.Fattura;
 import it.ingsoft.model.fattura.FatturaDAO;
 import it.ingsoft.model.relations.FatturaTurnoMappingDAO;
 import it.ingsoft.model.relations.UtenteFatturaMappingDAO;
+import it.ingsoft.model.relations.UtenteTempoMappingDAO;
 import it.ingsoft.model.turno.Turno;
 import it.ingsoft.model.utente.Utente;
 import it.ingsoft.persistence.DBInstance;
+import it.ingsoft.persistence.FactoryDAO;
 import it.ingsoft.persistence.db2.DB2FactoryDAO;
 
 public class DB2FatturaProxy extends Fattura {
+	
+	static
+	{
+		FactoryDAO factory = FactoryDAO.getDAOFactory(DBInstance.DB2);
+		
+		try
+		{
+			FatturaDAO fatturaDAO = factory.getFatturaDAO();
+			fatturaDAO.createTable();
+			
+		} catch (SQLException e) {
+			System.out.println("Trovata tabella fatture");
+		}
+		
+		try
+		{
+			FatturaTurnoMappingDAO fatTurDAO = factory.getFatturaTurnoMappingDAO();
+			fatTurDAO.createTable();
+			
+		} catch (SQLException e) {
+			System.out.println("Trovata tabella relazione fatture e turni");
+		}
+		
+		try
+		{
+			UtenteTempoMappingDAO uteFatDAO = factory.getUtenteTempoMappingDAO();
+			uteFatDAO.createTable();
+			
+		} catch (SQLException e) {
+			System.out.println("Trovata tabella relazione utenti e fatture");
+		}
+	}
 	
 	public DB2FatturaProxy(int idFattura) {
 		super();

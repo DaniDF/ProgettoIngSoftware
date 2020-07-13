@@ -8,7 +8,6 @@ import java.sql.Statement;
 
 import it.ingsoft.model.fattura.Fattura;
 import it.ingsoft.model.fattura.FatturaDAO;
-import it.ingsoft.persistence.db2.proxy.DB2FatturaProxy;
 
 public class DB2FatturaDAO implements FatturaDAO {
 
@@ -89,7 +88,8 @@ public class DB2FatturaDAO implements FatturaDAO {
 		ResultSet resS = prepStatement.executeQuery();
 		if(!resS.next()) throw new SQLException("No result");
 		
-		Fattura result = new DB2FatturaProxy(resS.getInt("IDFATTURA"));
+		Fattura result = new Fattura();
+		result.setIdFattura(resS.getInt("IDFATTURA"));
 		
 		if(resS.next()) throw new SQLException("Not unique identifier: multiple response");
 

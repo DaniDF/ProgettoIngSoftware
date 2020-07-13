@@ -6,9 +6,24 @@ import java.time.LocalDate;
 import it.ingsoft.model.utente.Utente;
 import it.ingsoft.model.utente.UtenteDAO;
 import it.ingsoft.persistence.DBInstance;
+import it.ingsoft.persistence.FactoryDAO;
 import it.ingsoft.persistence.db2.DB2FactoryDAO;
 
 public class DB2UtenteProxy extends Utente {
+	
+	static
+	{
+		FactoryDAO factory = FactoryDAO.getDAOFactory(DBInstance.DB2);
+		
+		try
+		{
+			UtenteDAO utenteDAO = factory.getUtenteDAO();
+			utenteDAO.createTable();
+			
+		} catch (SQLException e) {
+			System.out.println("Trovata tabella utenti");
+		}
+	}
 	
 	public DB2UtenteProxy(String codiceFiscale) {
 		super();
@@ -26,7 +41,8 @@ public class DB2UtenteProxy extends Utente {
 			super.setLuogoDiNascita(newUtente.getLuogoDiNascita());
 			super.setNazione(newUtente.getNazione());
 			super.setNome(newUtente.getNome());
-			super.setNumeroCivico(newUtente.getNumeroDiTelefono());
+			super.setNumeroCivico(newUtente.getNumeroCivico());
+			super.setNumeroDiTelefono(newUtente.getNumeroDiTelefono());
 			super.setProvincia(newUtente.getProvincia());
 			super.setVia(newUtente.getVia());
 			

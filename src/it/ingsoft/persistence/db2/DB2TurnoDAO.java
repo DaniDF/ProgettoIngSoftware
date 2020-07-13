@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 
 import it.ingsoft.model.turno.Turno;
 import it.ingsoft.model.turno.TurnoDAO;
-import it.ingsoft.persistence.db2.proxy.DB2TurnoProxy;
 
 public class DB2TurnoDAO implements TurnoDAO {
 
@@ -145,7 +144,7 @@ public class DB2TurnoDAO implements TurnoDAO {
 		ResultSet resS = prepStatement.executeQuery();
 		if(!resS.next()) throw new SQLException("No result");
 		
-		Turno result = new DB2TurnoProxy(idTurno);
+		Turno result = new Turno();
 		
 		Date datIn = resS.getDate("DATAINIZIO");
 		Time oraIn = resS.getTime("ORAINIZIO");
@@ -153,11 +152,12 @@ public class DB2TurnoDAO implements TurnoDAO {
 		Time oraFi = resS.getTime("ORAFINE");
 		
 		LocalDateTime inizio = null;
-		LocalDateTime fine = null;LocalDateTime.of(datFi.toLocalDate(), oraFi.toLocalTime());
+		LocalDateTime fine = null;
 		
 		try { inizio = LocalDateTime.of(datIn.toLocalDate(), oraIn.toLocalTime()); } catch(NullPointerException e) { inizio = null; }
 		try { fine = LocalDateTime.of(datFi.toLocalDate(), oraFi.toLocalTime()); } catch(NullPointerException e) { fine = null; }
 		
+		result.setId(idTurno);
 		result.setInizio(inizio);
 		result.setFine(fine);
 		result.setPostiDisponibili(resS.getInt("POSTIDISPONIBILI"));

@@ -8,7 +8,6 @@ import java.sql.Statement;
 
 import it.ingsoft.model.tempo.Tempo;
 import it.ingsoft.model.tempo.TempoDAO;
-import it.ingsoft.persistence.db2.proxy.DB2TempoProxy;
 
 public class DB2TempoDAO implements TempoDAO {
 
@@ -95,8 +94,9 @@ public class DB2TempoDAO implements TempoDAO {
 		ResultSet resS = prepStatement.executeQuery();
 		if(!resS.next()) throw new SQLException("No result");
 		
-		Tempo result = new DB2TempoProxy(idTempo);
+		Tempo result = new Tempo();
 		
+		result.setIdTempo(idTempo);
 		result.setValore(resS.getLong("VALORE"));
 
 		if(resS.next()) throw new SQLException("Not unique identifier: multiple response");

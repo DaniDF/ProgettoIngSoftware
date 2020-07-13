@@ -10,7 +10,6 @@ import java.time.LocalDate;
 
 import it.ingsoft.model.utente.Utente;
 import it.ingsoft.model.utente.UtenteDAO;
-import it.ingsoft.persistence.db2.proxy.DB2UtenteProxy;
 
 public class DB2UtenteDAO implements UtenteDAO {
 
@@ -107,7 +106,7 @@ public class DB2UtenteDAO implements UtenteDAO {
 																						"CITTA = ?, " +
 																						"VIA = ?, " +
 																						"NUMEROCIVICO = ?, " +
-																						"CAP = ?" +
+																						"CAP = ? " +
 																						"WHERE CODICEFISCALE = ?");
 		
 		Date dataDiNascita = null;
@@ -159,11 +158,12 @@ public class DB2UtenteDAO implements UtenteDAO {
 		ResultSet resS = prepStatement.executeQuery();
 		if(!resS.next()) throw new SQLException("No result");
 		
-		Utente result = new DB2UtenteProxy(codiceFiscale);
+		Utente result = new Utente();
 		
 		LocalDate dataDiNascita = resS.getDate("DATADINASCITA").toLocalDate();
 		char[] cap = resS.getString("CAP").toCharArray();
 		
+		result.setCodiceFiscale(codiceFiscale);
 		result.setNome(resS.getString("NOME"));
 		result.setCognome(resS.getString("COGNOME"));
 		result.setDataDiNascita(dataDiNascita);

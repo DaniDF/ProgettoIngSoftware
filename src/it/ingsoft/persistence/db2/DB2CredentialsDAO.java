@@ -12,21 +12,30 @@ import it.ingsoft.model.security.CredentialsDAO;
 
 public class DB2CredentialsDAO implements CredentialsDAO {
 
-	static
+	@Override
+	public void createTable() throws SQLException
 	{
-		try
-		{
-			Connection connection = DB2FactoryDAO.createConnection();
-			Statement statement = connection.prepareStatement("CREATE TABLE CREDENTIALS ("
-																	+ "USERNAME VARCHAR(255) NOT NULL PRIMARY KEY, "
-																	+ "PASSWORD VARCHAR(255) NOT NULL )");
-			
-			statement.close();
-			DB2FactoryDAO.closeConnection(connection);
-			
-		} catch (SQLException e) {
-			System.err.println("DB credenziali gia presente");
-		}
+		Connection connection = DB2FactoryDAO.createConnection();
+		Statement statement = connection.createStatement();
+		
+		statement.execute("CREATE TABLE CREDENTIALS ("
+								+ "USERNAME VARCHAR(255) NOT NULL PRIMARY KEY, "
+								+ "PASSWORD VARCHAR(255) NOT NULL )");
+		
+		statement.close();
+		DB2FactoryDAO.closeConnection(connection);
+	}
+	
+	@Override
+	public void dropTable() throws SQLException
+	{
+		Connection connection = DB2FactoryDAO.createConnection();
+		Statement statement = connection.createStatement();
+		
+		statement.execute("DROP TABLE CREDENTIALS");
+		
+		statement.close();
+		DB2FactoryDAO.closeConnection(connection);
 	}
 	
 	@Override
@@ -54,8 +63,8 @@ public class DB2CredentialsDAO implements CredentialsDAO {
 		Connection connection = DB2FactoryDAO.createConnection();
 		PreparedStatement prepStatement = connection.prepareStatement("INSERT INTO CREDENTIALS (" +
 																								"USERNAME, " +
-																								"PASSWORD) " +
-																								"VALUES (?,?)");
+																								"PASSWORD" +
+																								") VALUES (?,?)");
 		prepStatement.setString(1, username);
 		prepStatement.setString(2, password);
 		

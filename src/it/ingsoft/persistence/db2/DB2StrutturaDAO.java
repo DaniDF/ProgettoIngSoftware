@@ -9,7 +9,6 @@ import java.sql.Statement;
 
 import it.ingsoft.model.struttura.Struttura;
 import it.ingsoft.model.struttura.StrutturaDAO;
-import it.ingsoft.persistence.db2.proxy.DB2StrutturaProxy;
 
 public class DB2StrutturaDAO implements StrutturaDAO {
 	
@@ -144,12 +143,15 @@ public class DB2StrutturaDAO implements StrutturaDAO {
 		ResultSet resS = prepStatement.executeQuery();
 		if(!resS.next()) throw new SQLException("No result");
 		
-		Struttura result = new DB2StrutturaProxy(partitaIva);
+		Struttura result = new Struttura();
 		
 		char[] cap = resS.getString("CAP").toCharArray();
+		File file = null;
+		if(resS.getString("FOTOFATTURAVALIDA") != null) file = new File(resS.getString("FOTOFATTURAVALIDA"));
 		
+		result.setPartitaIva(partitaIva);
 		result.setNomeStruttura(resS.getString("NOMESTRUTTURA"));
-		result.setFotoFatturaValida(new File(resS.getString("FOTOFATTURAVALIDA")));
+		result.setFotoFatturaValida(file);
 		result.setIban(resS.getString("IBAN"));
 		result.setNazione(resS.getString("NAZIONE"));
 		result.setProvincia(resS.getString("PROVINCIA"));

@@ -12,9 +12,42 @@ import it.ingsoft.model.tempo.Tempo;
 import it.ingsoft.model.turno.Turno;
 import it.ingsoft.model.turno.TurnoDAO;
 import it.ingsoft.persistence.DBInstance;
+import it.ingsoft.persistence.FactoryDAO;
 import it.ingsoft.persistence.db2.DB2FactoryDAO;
 
 public class DB2TurnoProxy extends Turno {
+	
+	static
+	{
+		FactoryDAO factory = FactoryDAO.getDAOFactory(DBInstance.DB2);
+		
+		try
+		{
+			TurnoDAO turnoDAO = factory.getTurnoDAO();
+			turnoDAO.createTable();
+			
+		} catch (SQLException e) {
+			System.out.println("Trovata tabella turni");
+		}
+		
+		try
+		{
+			TurnoTempoMappingDAO turTemDAO = factory.getTurnoTempoMappingDAO();
+			turTemDAO.createTable();
+			
+		} catch (SQLException e) {
+			System.out.println("Trovata tabella relazione turni e tempi");
+		}
+		
+		try
+		{
+			StrutturaTurnoMappingDAO strTurDAO = factory.getStrutturaTurnoMappingDAO();
+			strTurDAO.createTable();
+			
+		} catch (SQLException e) {
+			System.out.println("Trovata tabella relazione strutture e turni");
+		}
+	}
 	
 	public DB2TurnoProxy(int id) {
 		super();

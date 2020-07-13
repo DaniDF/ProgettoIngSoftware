@@ -7,9 +7,33 @@ import it.ingsoft.model.tempo.Tempo;
 import it.ingsoft.model.tempo.TempoDAO;
 import it.ingsoft.model.utente.Utente;
 import it.ingsoft.persistence.DBInstance;
+import it.ingsoft.persistence.FactoryDAO;
 import it.ingsoft.persistence.db2.DB2FactoryDAO;
 
 public class DB2TempoProxy extends Tempo {
+	
+	static
+	{
+		FactoryDAO factory = FactoryDAO.getDAOFactory(DBInstance.DB2);
+		
+		try
+		{
+			TempoDAO tempoDAO = factory.getTempoDAO();
+			tempoDAO.createTable();
+			
+		} catch (SQLException e) {
+			System.out.println("Trovata tabella tempi");
+		}
+		
+		try
+		{
+			UtenteTempoMappingDAO uteTemDAO = factory.getUtenteTempoMappingDAO();
+			uteTemDAO.createTable();
+			
+		} catch (SQLException e) {
+			System.out.println("Trovata tabella relazione utenti e tempi");
+		}
+	}
 	
 	public DB2TempoProxy(int idTempo) {
 		super();
